@@ -36,10 +36,7 @@
 
 ![主页](./src/pic.jpg)
 
-<center>
-<video controls width="240" poster="./src/pic.jpg">
-    <source src="./src/record.mp4" type="video/mp4" />
-</video></center>
+./src/record.mp4
 
 直播打开速度极快，以上视频在小米13上测试，2秒即可打开，在电视上测试，大概5秒左右打开
 
