@@ -36,7 +36,9 @@
 
 ![主页](./src/pic.jpg)
 
-./src/record.mp4
+https://github.com/user-attachments/assets/d0f677f0-2514-494e-92f5-77feb7774d9f
+
+**src/record.mp4**
 
 直播打开速度极快，以上视频在小米13上测试，2秒即可打开，在电视上测试，大概5秒左右打开
 
