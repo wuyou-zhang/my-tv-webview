@@ -1,0 +1,15 @@
+{
+    "watch_error_text": [
+        { "selector": "div.loading1-main" },
+        { "selector": "#error_msg_player" },
+        { "selector": "div.reason-tnUaKc" },
+        { "selector": "#TipsLayout", "first_line": true, "skip_text": ["更多直播"] }
+    ],
+    "watch_click": [
+        { "selector": "#poster_yd_video_pay", "delay": 300 }
+    ],
+    "watch_error_source": [
+        { "source": "https://p.statickksmg.com/cont/2023/10/08/image_1696731269_qOxBpp34.jpg", "show_error": "本时段暂不提供网络直播服务" },
+        { "source": "https://p.statickksmg.com/cont/2023/07/04/image_1688459297_GkOveao3_w1280.jpg", "show_error": "本时段暂不提供网络直播服务" }
+    ]
+}
