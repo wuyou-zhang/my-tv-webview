@@ -3,12 +3,12 @@
 
 随时收看TV直播，支持手机/电视TV，最低支持Android5.0
 
-软件极其简单，隐藏全部的广告、项目地址、更新链接、设置项等等
+软件极其简单，隐藏全部的广告、项目地址、更新链接、设置项等等，稳定兼容版内置火狐 v144 内核，无需升级系统webview，无需手动安装x5内核。
 
 > 软件没有设置项，这纯粹是个人项目，按照自己的使用习惯进行的设置
 > 没有设置页面可以是优点，也可以是缺点，软件心智负担极低，安装就能用，不需要折腾
 
-所以请务必点个Start，软件内没有任何可显示的链接，不点收藏，下次就找不到了！
+所以请务必点个Star，软件内没有任何可显示的链接，不点收藏，下次就找不到了。
 
 **自定义源、导入源查看 source 目录**
 
@@ -57,6 +57,7 @@ https://github.com/user-attachments/assets/d0f677f0-2514-494e-92f5-77feb7774d9f
 项目参考：
 
 [my-tv-0](https://github.com/lizongying/my-tv-0)
+
 [WebViewTvLive](https://github.com/hxh19950701/WebViewTvLive)
 
 软件ui界面参考 `my-tv-0` ,运行核心参考 `WebViewTvLive` 。由于目前大量的iptv源失效，故而使用了 `webview` 方式
