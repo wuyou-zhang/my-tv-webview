@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.main_browse_fragment, playerFragment)
+                .add(R.id.main_browse_fragment, loadingFragment)
                 .add(R.id.main_browse_fragment, infoFragment)
                 .add(R.id.main_browse_fragment, channelFragment)
                 .commitNowAllowingStateLoss()
@@ -261,9 +262,7 @@ class MainActivity : AppCompatActivity() {
                     showFragment(loadingFragment)
                     playerFragment.play(tvModel)
                     infoFragment.show(tvModel)
-                    if (SP.channelNum) {
-                        channelFragment.show(tvModel)
-                    }
+                    channelFragment.show(tvModel)
                 }
             }
 

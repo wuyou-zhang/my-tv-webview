@@ -33,30 +33,16 @@ class InfoFragment : Fragment() {
 
         val application = requireActivity().applicationContext as MyTVApplication
 
-        binding.info.layoutParams.width = application.px2Px(binding.info.layoutParams.width)
         binding.info.layoutParams.height = application.px2Px(binding.info.layoutParams.height)
 
         val layoutParams = binding.info.layoutParams as ViewGroup.MarginLayoutParams
         layoutParams.bottomMargin = application.px2Px(binding.info.marginBottom)
         binding.info.layoutParams = layoutParams
 
-        binding.logo.layoutParams.width = application.px2Px(binding.logo.layoutParams.width)
-        var padding = application.px2Px(binding.logo.paddingTop)
-        binding.logo.setPadding(padding, padding, padding, padding)
-        binding.main.layoutParams.width = application.px2Px(binding.main.layoutParams.width)
-        padding = application.px2Px(binding.main.paddingTop)
-        binding.main.setPadding(padding, padding, padding, padding)
-
-        val layoutParamsMain = binding.main.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParamsMain.marginStart = application.px2Px(binding.main.marginStart)
-        binding.main.layoutParams = layoutParamsMain
-
-        val layoutParamsDesc = binding.desc.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParamsDesc.topMargin = application.px2Px(binding.desc.marginTop)
-        binding.desc.layoutParams = layoutParamsDesc
+        binding.channelNum.layoutParams.width = application.px2Px(binding.channelNum.layoutParams.width)
+        binding.channelNum.textSize = application.px2PxFont(binding.channelNum.textSize)
 
         binding.title.textSize = application.px2PxFont(binding.title.textSize)
-        binding.desc.textSize = application.px2PxFont(binding.desc.textSize)
 
         binding.container.layoutParams.width = application.shouldWidthPx()
         binding.container.layoutParams.height = application.shouldHeightPx()
@@ -71,55 +57,15 @@ class InfoFragment : Fragment() {
     }
 
     fun show(tvModel: TVModel) {
-        // TODO make sure attached
         if (!isAdded) {
             Log.e(TAG, "Fragment not attached to a context.")
             return
         }
 
         val tv = tvModel.tv
-
-        val context = requireContext()
-        val application = context.applicationContext as MyTVApplication
-        val imageHelper = application.imageHelper
-
         binding.title.text = tv.title
-
-        when (tv.title) {
-            else -> {
-                val width = 300
-                val height = 180
-                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(bitmap)
-
-                val channelNum = if (tv.number == -1) tv.id.plus(1) else tv.number
-                var size = 150f
-                if (channelNum > 99) {
-                    size = 100f
-                }
-                if (channelNum > 999) {
-                    size = 75f
-                }
-                val paint = Paint().apply {
-                    color = ContextCompat.getColor(context, R.color.title_blur)
-                    textSize = size
-                    textAlign = Paint.Align.CENTER
-                }
-                val x = width / 2f
-                val y = height / 2f - (paint.descent() + paint.ascent()) / 2
-                canvas.drawText(channelNum.toString(), x, y, paint)
-
-                val name = if (tv.name.isNotEmpty()) { tv.name } else { tv.title }
-                imageHelper.loadImage(name, binding.logo, bitmap, tv.logo)
-            }
-        }
-
-        val epg = tvModel.epg.value?.filter { it.beginTime < Utils.getDateTimestamp() }
-        if (!epg.isNullOrEmpty()) {
-            binding.desc.text = epg.last().title
-        } else {
-            binding.desc.text = "精彩節目"
-        }
+        val channelNum = if (tv.number == -1) tv.id.plus(1) else tv.number
+        binding.channelNum.text = channelNum.toString()
 
         handler.removeCallbacks(removeRunnable)
         view?.visibility = View.VISIBLE
