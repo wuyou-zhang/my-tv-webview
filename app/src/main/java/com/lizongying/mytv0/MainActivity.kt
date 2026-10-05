@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 
     private var isSafeToPerformFragmentTransactions = false
 
+    var lastMenuHideTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -313,13 +315,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            if (System.currentTimeMillis() - lastMenuHideTime < 500) {
+                return true
+            }
+
+            if (settingFragment.isAdded && !settingFragment.isHidden) {
+                hideFragment(settingFragment)
+                return true
+            }
+
             if (menuFragment.isAdded && !menuFragment.isHidden) {
-                val menuWidth = menuFragment.view?.width ?: (screenWidth / 3)
-                if (e.x > menuWidth) {
-                    toggleMenu()
+                val groupView = menuFragment.view?.findViewById<View>(R.id.group)
+                val listView = menuFragment.view?.findViewById<View>(R.id.list)
+                val contentWidth = (groupView?.width ?: 0) + (listView?.width ?: 0)
+                val density = resources.displayMetrics.density
+                val threshold = if (contentWidth > 0) contentWidth.toFloat() else ((220 + 360) * density)
+                if (e.x > threshold) {
+                    hideMenuFragment()
                 }
             } else {
-                toggleMenu()
+                showFragment(menuFragment)
+                menuActive()
             }
             return true
         }
@@ -518,7 +534,14 @@ class MainActivity : AppCompatActivity() {
             showFragment(menuFragment)
             menuActive()
         } else {
+            hideMenuFragment()
+        }
+    }
+
+    fun hideMenuFragment() {
+        if (menuFragment.isAdded && !menuFragment.isHidden) {
             hideFragment(menuFragment)
+            lastMenuHideTime = System.currentTimeMillis()
         }
     }
 

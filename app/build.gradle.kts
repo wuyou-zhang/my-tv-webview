@@ -10,7 +10,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.lizongying.mytv0"
+        applicationId = "com.lizongying.mytv.local"
         minSdk = 21
         targetSdk = 34
         versionCode = getVersionCode()

@@ -143,9 +143,11 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
     }
 
     private fun hideSelf() {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .hide(this)
-            .commitAllowingStateLoss()
+        (activity as? MainActivity)?.hideMenuFragment() ?: run {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .hide(this)
+                .commitAllowingStateLoss()
+        }
     }
 
     override fun onItemFocusChange(listTVModel: TVListModel, hasFocus: Boolean) {
@@ -183,9 +185,7 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             it.getCurrent()?.setReady()
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .hide(this)
-            .commitAllowingStateLoss()
+        hideSelf()
     }
 
     override fun onKey(keyCode: Int): Boolean {
