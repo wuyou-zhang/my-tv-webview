@@ -104,6 +104,7 @@ class PlayerFragment : Fragment() {
     private fun setupWebView() {
         val webView = binding.webView
         webView.setBackgroundColor(android.graphics.Color.BLACK)
+        webView.alpha = 0f
         webView.isFocusable = false
         webView.isFocusableInTouchMode = false
         webView.addJavascriptInterface(AndroidBridge(), "AndroidBridge")
@@ -135,11 +136,6 @@ class PlayerFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 injectPlayerScript(view)
-                activity?.runOnUiThread {
-                    if (isUsingWebView && _binding != null) {
-                        binding.webView.alpha = 1f
-                    }
-                }
             }
 
             override fun onReceivedError(
@@ -192,8 +188,9 @@ class PlayerFragment : Fragment() {
             .ysp-home-sidebar, .sidebar-content, .cctv-side-bar, [class*="sidebar"], [class*="SideBar"] {
                 display: none !important;
             }
-            html, body {
+            html, body, #app, #root, .app, .main-wrap, .page-wrap {
                 background: #000 !important;
+                background-color: #000 !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
@@ -250,7 +247,7 @@ class PlayerFragment : Fragment() {
                             });
                         }
                     }
-                    if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || !v.paused)) {
+                    if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || v.webkitDecodedFrameCount > 0)) {
                         if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
                             window.AndroidBridge.onVideoReady();
                         }
@@ -259,7 +256,7 @@ class PlayerFragment : Fragment() {
                         v.__mytv_bound = true;
                         ['playing', 'timeupdate', 'canplay'].forEach(function(ev) {
                             v.addEventListener(ev, function() {
-                                if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || !v.paused)) {
+                                if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || v.webkitDecodedFrameCount > 0)) {
                                     if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
                                         window.AndroidBridge.onVideoReady();
                                     }

@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         setContentView(R.layout.activity_main)
+        isSafeToPerformFragmentTransactions = true
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.init(this)
@@ -119,6 +120,11 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.main_browse_fragment, channelFragment)
                 .commitNowAllowingStateLoss()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        isSafeToPerformFragmentTransactions = true
     }
 
     fun updateMenuSize() {

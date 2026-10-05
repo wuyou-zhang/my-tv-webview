@@ -1,7 +1,10 @@
 <resources>
 
-    <style name="Theme.MyTV0" parent="@style/Theme.AppCompat.DayNight">
+    <style name="Theme.MyTV0" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:colorBackground">@color/black</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 </resources>
