@@ -74,38 +74,36 @@ class GroupAdapter(
             defaultFocused = true
         }
 
+        val isCurrentGroup = position == tvGroupModel.positionValue
+        viewHolder.setSelectedGroup(isCurrentGroup)
+
         val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             listener?.onItemFocusChange(listTVModel, hasFocus)
 
             if (hasFocus) {
-                viewHolder.focus(true)
                 focused = view
 
                 val p = listTVModel.getGroupIndex()
                 if (p != tvGroupModel.positionValue) {
+                    val prev = tvGroupModel.positionValue
                     tvGroupModel.setPosition(p)
+                    notifyItemChanged(prev)
+                    notifyItemChanged(p)
+                } else {
+                    viewHolder.setSelectedGroup(true)
                 }
-
-//                if (visible) {
-//
-//                    // "position" should not be used here, as the "list" may have been filtered out.
-//                    val p = listTVModel.getGroupIndex()
-//                    Log.e(TAG, "group getGroupIndex $p")
-//                    Log.e(TAG, "group positionValue ${tvGroupModel.positionValue}")
-//                    if (p != tvGroupModel.positionValue) {
-//                        tvGroupModel.setPosition(p)
-//                    }
-//                } else {
-//                    visible = true
-//                }
             } else {
-                viewHolder.focus(false)
+                viewHolder.setSelectedGroup(position == tvGroupModel.positionValue)
             }
         }
 
         view.onFocusChangeListener = onFocusChangeListener
 
         view.setOnClickListener { _ ->
+            val prev = tvGroupModel.positionValue
+            tvGroupModel.setPosition(position)
+            notifyItemChanged(prev)
+            notifyItemChanged(position)
             listener?.onItemClicked(position)
         }
 
@@ -175,10 +173,12 @@ class GroupAdapter(
             }
         }
 
-        fun focus(hasFocus: Boolean) {
-            if (hasFocus) {
-                binding.title.setTextColor(ContextCompat.getColor(context, R.color.focus))
+        fun setSelectedGroup(isSelected: Boolean) {
+            if (isSelected) {
+                binding.root.setBackgroundResource(R.color.focus)
+                binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
             } else {
+                binding.root.setBackgroundResource(android.R.color.transparent)
                 binding.title.setTextColor(
                     ContextCompat.getColor(
                         context,

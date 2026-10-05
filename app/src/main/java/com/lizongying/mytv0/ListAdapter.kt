@@ -40,9 +40,9 @@ class ListAdapter(
         val inflater = LayoutInflater.from(context)
         val binding = ListItemBinding.inflate(inflater, parent, false)
 
-        binding.icon.layoutParams.width = application.px2Px(binding.icon.layoutParams.width)
-        binding.icon.layoutParams.height = application.px2Px(binding.icon.layoutParams.height)
-        binding.icon.setPadding(application.px2Px(binding.icon.paddingTop))
+        binding.number.layoutParams.width = application.px2Px(binding.number.layoutParams.width)
+        binding.number.layoutParams.height = application.px2Px(binding.number.layoutParams.height)
+        binding.number.textSize = application.px2PxFont(binding.number.textSize)
 
         binding.title.layoutParams.width = application.px2Px(binding.title.layoutParams.width)
         binding.title.layoutParams.height = application.px2Px(binding.title.layoutParams.height)
@@ -185,7 +185,7 @@ class ListAdapter(
 
             viewHolder.bindTitle(tvModel.tv.title)
 
-            viewHolder.bindImage(tvModel)
+            viewHolder.bindNumber(tvModel)
         }
     }
 
@@ -194,48 +194,23 @@ class ListAdapter(
     class ViewHolder(private val context: Context, val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        val application = context.applicationContext as MyTVApplication
-        val imageHelper = application.imageHelper
-
-
         fun bindTitle(text: String) {
             binding.title.text = text
         }
 
-        fun bindImage(tvModel: TVModel) {
+        fun bindNumber(tvModel: TVModel) {
             val tv = tvModel.tv
-
-            val width = 300
-            val height = 180
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-
             val channelNum = if (tv.number == -1) tv.id.plus(1) else tv.number
-            var size = 150f
-            if (channelNum > 99) {
-                size = 100f
-            }
-            if (channelNum > 999) {
-                size = 75f
-            }
-            val paint = Paint().apply {
-                color = ContextCompat.getColor(context, R.color.title_blur)
-                textSize = size
-                textAlign = Paint.Align.CENTER
-            }
-            val x = width / 2f
-            val y = height / 2f - (paint.descent() + paint.ascent()) / 2
-            canvas.drawText(channelNum.toString(), x, y, paint)
-
-            val name = if (tv.name.isNotEmpty()) { tv.name } else { tv.title }
-            imageHelper.loadImage(name, binding.icon, bitmap, tv.logo)
+            binding.number.text = channelNum.toString()
         }
 
         fun focus(hasFocus: Boolean) {
             if (hasFocus) {
+                binding.number.setTextColor(ContextCompat.getColor(context, R.color.white))
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
                 binding.root.setBackgroundResource(R.color.focus)
             } else {
+                binding.number.setTextColor(ContextCompat.getColor(context, R.color.title_blur))
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.title_blur))
                 binding.root.setBackgroundResource(R.color.blur)
             }

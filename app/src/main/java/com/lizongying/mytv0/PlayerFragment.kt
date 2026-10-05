@@ -60,22 +60,47 @@ class PlayerFragment : Fragment() {
 
     private var watchdogRunnable: Runnable? = null
 
+    private fun captureSnapshot() {
+        if (_binding == null) return
+        val targetView = if (isUsingWebView) binding.webView else binding.playerView
+        if (targetView.width > 0 && targetView.height > 0) {
+            try {
+                val bitmap = Bitmap.createBitmap(targetView.width, targetView.height, Bitmap.Config.ARGB_8888)
+                val canvas = android.graphics.Canvas(bitmap)
+                targetView.draw(canvas)
+                binding.snapshotView.setImageBitmap(bitmap)
+                binding.snapshotView.alpha = 1f
+                binding.snapshotView.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                Log.e(TAG, "captureSnapshot error", e)
+            }
+        }
+    }
+
+    private fun dismissSnapshot() {
+        if (_binding != null && binding.snapshotView.visibility == View.VISIBLE) {
+            binding.snapshotView.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .withEndAction {
+                    binding.snapshotView.visibility = View.GONE
+                    binding.snapshotView.setImageBitmap(null)
+                }
+                .start()
+        }
+    }
+
     fun onVideoPlaying() {
         cancelVideoWatchdog()
         tvModel?.setErrInfo("")
-        if (_binding != null && binding.webView.alpha < 1f) {
-            binding.webView.animate()
-                .alpha(1f)
-                .setDuration(200)
-                .start()
-        }
+        dismissSnapshot()
     }
 
     private fun startVideoWatchdog() {
         cancelVideoWatchdog()
         watchdogRunnable = Runnable {
-            if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
-                binding.webView.alpha = 1f
+            if (isUsingWebView && _binding != null) {
+                dismissSnapshot()
                 injectPlayerScript(binding.webView)
             }
         }
@@ -299,6 +324,7 @@ class PlayerFragment : Fragment() {
                     tv.confirmVideoIndex()
                     tv.setErrInfo("")
                     tv.retryTimes = 0
+                    dismissSnapshot()
                 } else {
                     Log.i(TAG, "${tv.tv.title} 播放停止")
                 }
@@ -362,6 +388,8 @@ class PlayerFragment : Fragment() {
         val url = tvModel.getVideoUrl() ?: return
         Log.i(TAG, "play url: $url")
 
+        captureSnapshot()
+
         // If it's a web URL (e.g. yangshipin.cn, cctv.com), play via WebView
         val isWebUrl = (url.startsWith("http://") || url.startsWith("https://")) &&
                 !url.contains(".m3u8") && !url.contains(".mp4") && !url.contains(".flv")
@@ -371,7 +399,7 @@ class PlayerFragment : Fragment() {
             player?.stop()
             binding.playerView.visibility = View.GONE
             binding.webView.visibility = View.VISIBLE
-            binding.webView.alpha = 0f
+            binding.webView.alpha = 1f
             cancelVideoWatchdog()
             binding.webView.stopLoading()
             binding.webView.evaluateJavascript(
@@ -514,6 +542,8 @@ class PlayerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        cancelVideoWatchdog()
+        _binding?.snapshotView?.setImageBitmap(null)
         _binding = null
     }
 

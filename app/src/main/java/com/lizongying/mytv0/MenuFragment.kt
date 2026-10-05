@@ -134,8 +134,12 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             return
         }
 
+        val prevPosition = viewModel.groupModel.positionValue
         viewModel.groupModel.setPosition(position)
         SP.positionGroup = position
+
+        groupAdapter.notifyItemChanged(prevPosition)
+        groupAdapter.notifyItemChanged(position)
 
         viewModel.groupModel.getCurrentList()?.let {
             (binding.list.adapter as ListAdapter).update(it)
@@ -240,6 +244,8 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
         if (position != viewModel.groupModel.positionValue
         ) {
             updateList(position)
+        } else {
+            groupAdapter.changed()
         }
         viewModel.groupModel.getCurrentList()?.let {
             listAdapter.toPosition(it.positionPlayingValue)
