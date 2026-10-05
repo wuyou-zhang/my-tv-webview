@@ -3,7 +3,7 @@
     "id": 0,
     "name": "CCTV-4k",
     "title": "CCTV-4k 超清",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600002264"
     ],
@@ -13,7 +13,7 @@
     "id": 1,
     "name": "CCTV-1",
     "title": "CCTV-1 综合",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001859"
     ],
@@ -23,7 +23,7 @@
     "id": 2,
     "name": "CCTV-2",
     "title": "CCTV-2 财经",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001800"
     ],
@@ -33,7 +33,7 @@
     "id": 3,
     "name": "CCTV-3",
     "title": "CCTV-3 综艺",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001801"
     ],
@@ -43,7 +43,7 @@
     "id": 4,
     "name": "CCTV-4",
     "title": "CCTV-4 中文国际",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001814"
     ],
@@ -53,7 +53,7 @@
     "id": 5,
     "name": "CCTV-5",
     "title": "CCTV-5 体育",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001818"
     ],
@@ -63,7 +63,7 @@
     "id": 6,
     "name": "CCTV-5+",
     "title": "CCTV-5+ 体育赛事",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001817"
     ],
@@ -73,7 +73,7 @@
     "id": 7,
     "name": "CCTV-6",
     "title": "CCTV-6 电影",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600108442"
     ],
@@ -82,8 +82,8 @@
   {
     "id": 8,
     "name": "CCTV-7",
-    "title": "CCTV-7 国防",
-    "group": "央视频(手机)",
+    "title": "CCTV-7 国防军事",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600004092"
     ],
@@ -93,7 +93,7 @@
     "id": 9,
     "name": "CCTV-8",
     "title": "CCTV-8 电视剧",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001803"
     ],
@@ -103,7 +103,7 @@
     "id": 10,
     "name": "CCTV-9",
     "title": "CCTV-9 纪录",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600004078"
     ],
@@ -113,7 +113,7 @@
     "id": 11,
     "name": "CCTV-10",
     "title": "CCTV-10 科教",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001805"
     ],
@@ -123,7 +123,7 @@
     "id": 12,
     "name": "CCTV-11",
     "title": "CCTV-11 戏曲",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001806"
     ],
@@ -133,7 +133,7 @@
     "id": 13,
     "name": "CCTV-12",
     "title": "CCTV-12 社会与法",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001807"
     ],
@@ -143,7 +143,7 @@
     "id": 14,
     "name": "CCTV-13",
     "title": "CCTV-13 新闻",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001811"
     ],
@@ -153,7 +153,7 @@
     "id": 15,
     "name": "CCTV-14",
     "title": "CCTV-14 少儿",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001809"
     ],
@@ -163,7 +163,7 @@
     "id": 16,
     "name": "CCTV-15",
     "title": "CCTV-15 音乐",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001815"
     ],
@@ -173,7 +173,7 @@
     "id": 17,
     "name": "CCTV-16",
     "title": "CCTV-16 奥林匹克",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600098637"
     ],
@@ -183,7 +183,7 @@
     "id": 18,
     "name": "CCTV-17",
     "title": "CCTV-17 农业农村",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600001810"
     ],
@@ -191,562 +191,782 @@
   },
   {
     "id": 19,
-    "name": "北京卫视",
-    "title": "北京卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002309"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/北京卫视.png"
-  },
-  {
-    "id": 20,
-    "name": "江苏卫视",
-    "title": "江苏卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002521"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/江苏卫视.png"
-  },
-  {
-    "id": 21,
-    "name": "东方卫视",
-    "title": "东方卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002483"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/东方卫视.png"
-  },
-  {
-    "id": 22,
-    "name": "浙江卫视",
-    "title": "浙江卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002520"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/浙江卫视.png"
-  },
-  {
-    "id": 23,
-    "name": "湖南卫视",
-    "title": "湖南卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002475"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/湖南卫视.png"
-  },
-  {
-    "id": 24,
-    "name": "湖北卫视",
-    "title": "湖北卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002508"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/湖北卫视.png"
-  },
-  {
-    "id": 25,
-    "name": "广东卫视",
-    "title": "广东卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002485"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/广东卫视.png"
-  },
-  {
-    "id": 26,
-    "name": "广西卫视",
-    "title": "广西卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002509"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/广西卫视.png"
-  },
-  {
-    "id": 27,
-    "name": "黑龙江卫视",
-    "title": "黑龙江卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002498"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/黑龙江卫视.png"
-  },
-  {
-    "id": 28,
-    "name": "海南卫视",
-    "title": "海南卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002506"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/海南卫视.png"
-  },
-  {
-    "id": 29,
-    "name": "重庆卫视",
-    "title": "重庆卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002531"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/重庆卫视.png"
-  },
-  {
-    "id": 30,
-    "name": "深圳卫视",
-    "title": "深圳卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002481"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/深圳卫视.png"
-  },
-  {
-    "id": 31,
-    "name": "四川卫视",
-    "title": "四川卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002516"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/四川卫视.png"
-  },
-  {
-    "id": 32,
-    "name": "河南卫视",
-    "title": "河南卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002525"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/河南卫视.png"
-  },
-  {
-    "id": 33,
-    "name": "东南卫视",
-    "title": "东南卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002484"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/东南卫视.png"
-  },
-  {
-    "id": 34,
-    "name": "贵州卫视",
-    "title": "贵州卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002490"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/贵州卫视.png"
-  },
-  {
-    "id": 35,
-    "name": "江西卫视",
-    "title": "江西卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002503"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/江西卫视.png"
-  },
-  {
-    "id": 36,
-    "name": "辽宁卫视",
-    "title": "辽宁卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002505"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/辽宁卫视.png"
-  },
-  {
-    "id": 37,
-    "name": "安徽卫视",
-    "title": "安徽卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002532"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/安徽卫视.png"
-  },
-  {
-    "id": 38,
-    "name": "河北卫视",
-    "title": "河北卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002493"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/河北卫视.png"
-  },
-  {
-    "id": 39,
-    "name": "山东卫视",
-    "title": "山东卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002513"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/山东卫视.png"
-  },
-  {
-    "id": 40,
-    "name": "天津卫视",
-    "title": "天津卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600152137"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/天津卫视.png"
-  },
-  {
-    "id": 41,
-    "name": "吉林卫视",
-    "title": "吉林卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190405"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/吉林卫视.png"
-  },
-  {
-    "id": 42,
-    "name": "陕西卫视",
-    "title": "陕西卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190400"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/陕西卫视.png"
-  },
-  {
-    "id": 43,
-    "name": "甘肃卫视",
-    "title": "甘肃卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190408"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/甘肃卫视.png"
-  },
-  {
-    "id": 44,
-    "name": "宁夏卫视",
-    "title": "宁夏卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190737"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/宁夏卫视.png"
-  },
-  {
-    "id": 45,
-    "name": "内蒙古卫视",
-    "title": "内蒙古卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190401"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/内蒙古卫视.png"
-  },
-  {
-    "id": 46,
-    "name": "云南卫视",
-    "title": "云南卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190402"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/云南卫视.png"
-  },
-  {
-    "id": 47,
-    "name": "山西卫视",
-    "title": "山西卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190407"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/山西卫视.png"
-  },
-  {
-    "id": 48,
-    "name": "青海卫视",
-    "title": "青海卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190406"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/青海卫视.png"
-  },
-  {
-    "id": 49,
-    "name": "西藏卫视",
-    "title": "西藏卫视",
-    "group": "央视频(手机)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600190403"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/西藏卫视.png"
-  },
-  {
-    "id": 50,
     "name": "CGTN",
     "title": "CGTN",
-    "group": "央视频(手机)",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600014550"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN.png"
   },
   {
-    "id": 51,
+    "id": 20,
     "name": "CGTN法语频道",
-    "title": "CGTN法语频道",
-    "group": "央视频(手机)",
+    "title": "CGTN 法语频道",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600084704"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN法语频道.png"
   },
   {
-    "id": 52,
+    "id": 21,
     "name": "CGTN俄语频道",
-    "title": "CGTN俄语频道",
-    "group": "央视频(手机)",
+    "title": "CGTN 俄语频道",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600084758"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN俄语频道.png"
   },
   {
-    "id": 53,
+    "id": 22,
     "name": "CGTN阿拉伯语频道",
-    "title": "CGTN阿拉伯语频道",
-    "group": "央视频(手机)",
+    "title": "CGTN 阿拉伯语频道",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600084782"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN阿拉伯语频道.png"
   },
   {
-    "id": 54,
+    "id": 23,
     "name": "CGTN西班牙语频道",
-    "title": "CGTN西班牙语频道",
-    "group": "央视频(手机)",
+    "title": "CGTN 西班牙语频道",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600084744"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN西班牙语频道.png"
   },
   {
-    "id": 55,
+    "id": 24,
     "name": "CGTN外语记录频道",
-    "title": "CGTN外语记录频道",
-    "group": "央视频(手机)",
+    "title": "CGTN 纪录频道",
+    "group": "央视频道",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600084781"
     ],
     "logo": "https://live.fanmingming.cn/tv/CGTN外语记录频道.png"
   },
   {
-    "id": 56,
-    "name": "CCTV-1",
-    "title": "CCTV-1 综合",
-    "group": "央视网",
+    "id": 25,
+    "name": "山东卫视",
+    "title": "山东卫视 (超清)",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv1/"
+      "https://www.yangshipin.cn/tv/home?pid=600002513"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-1.png"
+    "logo": "https://live.fanmingming.cn/tv/山东卫视.png"
   },
   {
-    "id": 57,
-    "name": "CCTV-2",
-    "title": "CCTV-2 财经",
-    "group": "央视网",
+    "id": 26,
+    "name": "齐鲁频道",
+    "title": "山东广播电视台 齐鲁频道",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv2/"
+      "https://v.iqilu.com/live/qlpd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-2.png"
+    "logo": "https://live.fanmingming.cn/tv/齐鲁频道.png"
   },
   {
-    "id": 58,
-    "name": "CCTV-3",
-    "title": "CCTV-3 综艺",
-    "group": "央视网",
+    "id": 27,
+    "name": "山东新闻",
+    "title": "山东广播电视台 新闻频道",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv3/"
+      "https://v.iqilu.com/live/ggpd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-3.png"
+    "logo": "https://live.fanmingming.cn/tv/山东新闻.png"
   },
   {
-    "id": 59,
-    "name": "CCTV-4",
-    "title": "CCTV-4 中文国际",
-    "group": "央视网",
+    "id": 28,
+    "name": "山东体育",
+    "title": "山东广播电视台 体育休闲",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv4/"
+      "https://v.iqilu.com/live/typd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-4.png"
+    "logo": "https://live.fanmingming.cn/tv/山东体育.png"
   },
   {
-    "id": 60,
-    "name": "CCTV-5",
-    "title": "CCTV-5 体育",
-    "group": "央视网",
+    "id": 29,
+    "name": "山东生活",
+    "title": "山东广播电视台 生活频道",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv5/"
+      "https://v.iqilu.com/live/shpd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-5.png"
+    "logo": "https://live.fanmingming.cn/tv/山东生活.png"
   },
   {
-    "id": 61,
-    "name": "CCTV-13",
-    "title": "CCTV-13 新闻",
-    "group": "央视网",
+    "id": 30,
+    "name": "山东综艺",
+    "title": "山东广播电视台 综艺频道",
+    "group": "山东",
     "uris": [
-      "https://tv.cctv.com/live/cctv13/"
+      "https://v.iqilu.com/live/zypd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/CCTV-13.png"
+    "logo": "https://live.fanmingming.cn/tv/山东综艺.png"
   },
   {
-    "id": 62,
-    "name": "东方卫视",
-    "title": "东方卫视",
-    "group": "地方台(上海)",
+    "id": 31,
+    "name": "山东文旅",
+    "title": "山东广播电视台 文旅频道",
+    "group": "山东",
     "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002483"
+      "https://v.iqilu.com/live/yspd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/东方卫视.png"
+    "logo": "https://live.fanmingming.cn/tv/山东文旅.png"
   },
   {
-    "id": 63,
-    "name": "上海新闻综合",
-    "title": "上海新闻综合",
-    "group": "地方台(上海)",
+    "id": 32,
+    "name": "山东农科",
+    "title": "山东广播电视台 农科频道",
+    "group": "山东",
     "uris": [
-      "https://live.kankanews.com/huikan/"
+      "https://v.iqilu.com/live/nkpd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/上海新闻综合.png"
+    "logo": "https://live.fanmingming.cn/tv/山东农科.png"
   },
   {
-    "id": 64,
-    "name": "纪实人文",
-    "title": "纪实人文",
-    "group": "地方台(上海)",
+    "id": 33,
+    "name": "山东少儿",
+    "title": "山东广播电视台 少儿频道",
+    "group": "山东",
     "uris": [
-      "https://live.kankanews.com/huikan/"
+      "https://v.iqilu.com/live/sepd/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/纪实人文.png"
+    "logo": "https://live.fanmingming.cn/tv/山东少儿.png"
   },
   {
-    "id": 65,
-    "name": "广东卫视",
-    "title": "广东卫视",
-    "group": "地方台(广东)",
+    "id": 34,
+    "name": "济南新闻",
+    "title": "济南新闻综合频道",
+    "group": "山东",
     "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002485"
+      "https://live.ijntv.cn/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/广东卫视.png"
+    "logo": "https://live.fanmingming.cn/tv/济南新闻.png"
   },
   {
-    "id": 66,
-    "name": "深圳卫视",
-    "title": "深圳卫视",
-    "group": "地方台(广东)",
+    "id": 35,
+    "name": "青岛新闻",
+    "title": "青岛新闻综合频道",
+    "group": "山东",
     "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002481"
+      "https://www.qtv.com.cn/"
     ],
-    "logo": "https://live.fanmingming.cn/tv/深圳卫视.png"
+    "logo": "https://live.fanmingming.cn/tv/青岛新闻.png"
   },
   {
-    "id": 67,
-    "name": "大湾区卫视",
-    "title": "大湾区卫视",
-    "group": "地方台(广东)",
-    "uris": [
-      "https://www.gdtv.cn/tvChannelDetail/44"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/大湾区卫视.png"
-  },
-  {
-    "id": 68,
-    "name": "浙江卫视",
-    "title": "浙江卫视",
-    "group": "地方台(🌐更多)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002520"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/浙江卫视.png"
-  },
-  {
-    "id": 69,
-    "name": "江苏卫视",
-    "title": "江苏卫视",
-    "group": "地方台(🌐更多)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002521"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/江苏卫视.png"
-  },
-  {
-    "id": 70,
-    "name": "湖南卫视",
-    "title": "湖南卫视",
-    "group": "地方台(🌐更多)",
-    "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002475"
-    ],
-    "logo": "https://live.fanmingming.cn/tv/湖南卫视.png"
-  },
-  {
-    "id": 71,
+    "id": 36,
     "name": "北京卫视",
-    "title": "北京卫视",
-    "group": "地方台(🌐更多)",
+    "title": "北京卫视 (超清)",
+    "group": "北京",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600002309"
     ],
     "logo": "https://live.fanmingming.cn/tv/北京卫视.png"
   },
   {
-    "id": 72,
-    "name": "长城慢直播",
-    "title": "万里长城 慢直播",
-    "group": "直播中国",
+    "id": 37,
+    "name": "北京影视",
+    "title": "北京广播电视台 影视频道",
+    "group": "北京",
     "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600002264"
+      "https://item.btime.com/live/54r61r41b9t9glh3mfrs6oef35v"
     ],
-    "logo": ""
+    "logo": "https://live.fanmingming.cn/tv/北京影视.png"
+  },
+  {
+    "id": 38,
+    "name": "北京新闻",
+    "title": "北京广播电视台 新闻频道",
+    "group": "北京",
+    "uris": [
+      "https://item.btime.com/live/3673f8gqgfs8h4i7l148o1i7t8v"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/北京新闻.png"
+  },
+  {
+    "id": 39,
+    "name": "北京文艺",
+    "title": "北京广播电视台 文艺频道",
+    "group": "北京",
+    "uris": [
+      "https://item.btime.com/live/13cst4f028v99vh729596hvhsc4"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/北京文艺.png"
+  },
+  {
+    "id": 40,
+    "name": "卡酷少儿",
+    "title": "卡酷少儿卫视",
+    "group": "北京",
+    "uris": [
+      "https://item.btime.com/live/2g8f7h9h8v38e4h22v2g2b6564e"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/卡酷少儿.png"
+  },
+  {
+    "id": 41,
+    "name": "东方卫视",
+    "title": "东方卫视 (超清)",
+    "group": "上海",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002483"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/东方卫视.png"
+  },
+  {
+    "id": 42,
+    "name": "上海新闻综合",
+    "title": "上海新闻综合",
+    "group": "上海",
+    "uris": [
+      "https://live.kankanews.com/huikan/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/上海新闻综合.png"
+  },
+  {
+    "id": 43,
+    "name": "纪实人文",
+    "title": "上海纪实人文",
+    "group": "上海",
+    "uris": [
+      "https://live.kankanews.com/huikan/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/纪实人文.png"
+  },
+  {
+    "id": 44,
+    "name": "五星体育",
+    "title": "五星体育频道",
+    "group": "上海",
+    "uris": [
+      "https://live.kankanews.com/huikan/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/五星体育.png"
+  },
+  {
+    "id": 45,
+    "name": "第一财经",
+    "title": "第一财经频道",
+    "group": "上海",
+    "uris": [
+      "https://live.kankanews.com/huikan/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/第一财经.png"
+  },
+  {
+    "id": 46,
+    "name": "广东卫视",
+    "title": "广东卫视 (超清)",
+    "group": "广东",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002485"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广东卫视.png"
+  },
+  {
+    "id": 47,
+    "name": "深圳卫视",
+    "title": "深圳卫视 (超清)",
+    "group": "广东",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002481"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/深圳卫视.png"
+  },
+  {
+    "id": 48,
+    "name": "大湾区卫视",
+    "title": "大湾区卫视",
+    "group": "广东",
+    "uris": [
+      "https://www.gdtv.cn/tvChannelDetail/44"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/大湾区卫视.png"
+  },
+  {
+    "id": 49,
+    "name": "广东珠江",
+    "title": "广东广播电视台 珠江频道",
+    "group": "广东",
+    "uris": [
+      "https://www.gdtv.cn/tvChannelDetail/43"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广东珠江.png"
+  },
+  {
+    "id": 50,
+    "name": "广东体育",
+    "title": "广东广播电视台 体育频道",
+    "group": "广东",
+    "uris": [
+      "https://www.gdtv.cn/tvChannelDetail/46"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广东体育.png"
+  },
+  {
+    "id": 51,
+    "name": "广东影视",
+    "title": "广东广播电视台 影视频道",
+    "group": "广东",
+    "uris": [
+      "https://www.gdtv.cn/tvChannelDetail/48"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广东影视.png"
+  },
+  {
+    "id": 52,
+    "name": "广东新闻",
+    "title": "广东广播电视台 新闻频道",
+    "group": "广东",
+    "uris": [
+      "https://www.gdtv.cn/tvChannelDetail/45"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广东新闻.png"
+  },
+  {
+    "id": 53,
+    "name": "江苏卫视",
+    "title": "江苏卫视 (超清)",
+    "group": "江苏",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002521"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江苏卫视.png"
+  },
+  {
+    "id": 54,
+    "name": "江苏城市",
+    "title": "江苏城市频道",
+    "group": "江苏",
+    "uris": [
+      "https://live.jstv.com/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江苏城市.png"
+  },
+  {
+    "id": 55,
+    "name": "江苏综艺",
+    "title": "江苏综艺频道",
+    "group": "江苏",
+    "uris": [
+      "https://live.jstv.com/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江苏综艺.png"
+  },
+  {
+    "id": 56,
+    "name": "江苏影视",
+    "title": "江苏影视频道",
+    "group": "江苏",
+    "uris": [
+      "https://live.jstv.com/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江苏影视.png"
+  },
+  {
+    "id": 57,
+    "name": "江苏新闻",
+    "title": "江苏公共新闻",
+    "group": "江苏",
+    "uris": [
+      "https://live.jstv.com/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江苏新闻.png"
+  },
+  {
+    "id": 58,
+    "name": "浙江卫视",
+    "title": "浙江卫视 (超清)",
+    "group": "浙江",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002520"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/浙江卫视.png"
+  },
+  {
+    "id": 59,
+    "name": "钱江都市",
+    "title": "钱江都市频道",
+    "group": "浙江",
+    "uris": [
+      "http://www.cztv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/钱江都市.png"
+  },
+  {
+    "id": 60,
+    "name": "浙江经济",
+    "title": "浙江经济生活",
+    "group": "浙江",
+    "uris": [
+      "http://www.cztv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/浙江经济.png"
+  },
+  {
+    "id": 61,
+    "name": "浙江教科",
+    "title": "浙江教科影视频道",
+    "group": "浙江",
+    "uris": [
+      "http://www.cztv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/浙江教科.png"
+  },
+  {
+    "id": 62,
+    "name": "湖南卫视",
+    "title": "湖南卫视 (超清)",
+    "group": "湖南",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002475"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖南卫视.png"
+  },
+  {
+    "id": 63,
+    "name": "湖南经视",
+    "title": "湖南经视频道",
+    "group": "湖南",
+    "uris": [
+      "https://www.mgtv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖南经视.png"
+  },
+  {
+    "id": 64,
+    "name": "湖南都市",
+    "title": "湖南都市频道",
+    "group": "湖南",
+    "uris": [
+      "https://www.mgtv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖南都市.png"
+  },
+  {
+    "id": 65,
+    "name": "金鹰卡通",
+    "title": "金鹰卡通卫视",
+    "group": "湖南",
+    "uris": [
+      "https://www.mgtv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/金鹰卡通.png"
+  },
+  {
+    "id": 66,
+    "name": "湖北卫视",
+    "title": "湖北卫视 (超清)",
+    "group": "湖北",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002508"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖北卫视.png"
+  },
+  {
+    "id": 67,
+    "name": "湖北经视",
+    "title": "湖北经视频道",
+    "group": "湖北",
+    "uris": [
+      "https://news.hubeitv.com.cn/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖北经视.png"
+  },
+  {
+    "id": 68,
+    "name": "湖北综合",
+    "title": "湖北综合频道",
+    "group": "湖北",
+    "uris": [
+      "https://news.hubeitv.com.cn/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖北综合.png"
+  },
+  {
+    "id": 69,
+    "name": "河南卫视",
+    "title": "河南卫视 (超清)",
+    "group": "河南",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002525"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/河南卫视.png"
+  },
+  {
+    "id": 70,
+    "name": "河南都市",
+    "title": "河南都市频道",
+    "group": "河南",
+    "uris": [
+      "https://www.hntv.tv/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/河南都市.png"
+  },
+  {
+    "id": 71,
+    "name": "河南民生",
+    "title": "河南民生频道",
+    "group": "河南",
+    "uris": [
+      "https://www.hntv.tv/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/河南民生.png"
+  },
+  {
+    "id": 72,
+    "name": "四川卫视",
+    "title": "四川卫视 (超清)",
+    "group": "四川",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002516"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/四川卫视.png"
   },
   {
     "id": 73,
-    "name": "黄山慢直播",
-    "title": "黄山胜景 慢直播",
-    "group": "直播中国",
+    "name": "四川影视",
+    "title": "四川影视文艺",
+    "group": "四川",
     "uris": [
-      "https://www.yangshipin.cn/tv/home?pid=600001859"
+      "https://www.sctv.com/live/"
     ],
-    "logo": ""
+    "logo": "https://live.fanmingming.cn/tv/四川影视.png"
   },
   {
     "id": 74,
-    "name": "抖音热播",
-    "title": "抖音热播直播",
-    "group": "抖音直播",
+    "name": "四川新闻",
+    "title": "四川新闻频道",
+    "group": "四川",
     "uris": [
-      "https://live.douyin.com"
+      "https://www.sctv.com/live/"
     ],
-    "logo": ""
+    "logo": "https://live.fanmingming.cn/tv/四川新闻.png"
+  },
+  {
+    "id": 75,
+    "name": "重庆卫视",
+    "title": "重庆卫视 (超清)",
+    "group": "重庆",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002531"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/重庆卫视.png"
+  },
+  {
+    "id": 76,
+    "name": "重庆新闻",
+    "title": "重庆新闻频道",
+    "group": "重庆",
+    "uris": [
+      "https://cq.cbg.cn/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/重庆新闻.png"
+  },
+  {
+    "id": 77,
+    "name": "重庆影视",
+    "title": "重庆影视频道",
+    "group": "重庆",
+    "uris": [
+      "https://cq.cbg.cn/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/重庆影视.png"
+  },
+  {
+    "id": 78,
+    "name": "天津卫视",
+    "title": "天津卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600152137"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/天津卫视.png"
+  },
+  {
+    "id": 79,
+    "name": "河北卫视",
+    "title": "河北卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002493"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/河北卫视.png"
+  },
+  {
+    "id": 80,
+    "name": "山西卫视",
+    "title": "山西卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190407"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/山西卫视.png"
+  },
+  {
+    "id": 81,
+    "name": "内蒙古卫视",
+    "title": "内蒙古卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190401"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/内蒙古卫视.png"
+  },
+  {
+    "id": 82,
+    "name": "辽宁卫视",
+    "title": "辽宁卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002505"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/辽宁卫视.png"
+  },
+  {
+    "id": 83,
+    "name": "吉林卫视",
+    "title": "吉林卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190405"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/吉林卫视.png"
+  },
+  {
+    "id": 84,
+    "name": "黑龙江卫视",
+    "title": "黑龙江卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002498"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/黑龙江卫视.png"
+  },
+  {
+    "id": 85,
+    "name": "安徽卫视",
+    "title": "安徽卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002532"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/安徽卫视.png"
+  },
+  {
+    "id": 86,
+    "name": "东南卫视",
+    "title": "东南卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002484"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/东南卫视.png"
+  },
+  {
+    "id": 87,
+    "name": "江西卫视",
+    "title": "江西卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002503"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/江西卫视.png"
+  },
+  {
+    "id": 88,
+    "name": "广西卫视",
+    "title": "广西卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002509"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/广西卫视.png"
+  },
+  {
+    "id": 89,
+    "name": "海南卫视",
+    "title": "海南卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002506"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/海南卫视.png"
+  },
+  {
+    "id": 90,
+    "name": "贵州卫视",
+    "title": "贵州卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600002490"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/贵州卫视.png"
+  },
+  {
+    "id": 91,
+    "name": "云南卫视",
+    "title": "云南卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190402"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/云南卫视.png"
+  },
+  {
+    "id": 92,
+    "name": "西藏卫视",
+    "title": "西藏卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190403"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/西藏卫视.png"
+  },
+  {
+    "id": 93,
+    "name": "陕西卫视",
+    "title": "陕西卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190400"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/陕西卫视.png"
+  },
+  {
+    "id": 94,
+    "name": "甘肃卫视",
+    "title": "甘肃卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190408"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/甘肃卫视.png"
+  },
+  {
+    "id": 95,
+    "name": "青海卫视",
+    "title": "青海卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190406"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/青海卫视.png"
+  },
+  {
+    "id": 96,
+    "name": "宁夏卫视",
+    "title": "宁夏卫视",
+    "group": "全国卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190737"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/宁夏卫视.png"
   }
 ]

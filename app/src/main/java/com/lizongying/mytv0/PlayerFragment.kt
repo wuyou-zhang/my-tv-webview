@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -48,7 +49,43 @@ class PlayerFragment : Fragment() {
     private val handler = Handler(Looper.myLooper()!!)
     private val delayHideVolume = 2 * 1000L
 
-    private var defaultPlayerJs: String? = null
+    inner class AndroidBridge {
+        @JavascriptInterface
+        fun onVideoReady() {
+            activity?.runOnUiThread {
+                onVideoPlaying()
+            }
+        }
+    }
+
+    private var watchdogRunnable: Runnable? = null
+
+    fun onVideoPlaying() {
+        cancelVideoWatchdog()
+        tvModel?.setErrInfo("")
+        if (_binding != null && binding.webView.alpha < 1f) {
+            binding.webView.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start()
+        }
+    }
+
+    private fun startVideoWatchdog() {
+        cancelVideoWatchdog()
+        watchdogRunnable = Runnable {
+            if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
+                binding.webView.alpha = 1f
+                injectPlayerScript(binding.webView)
+            }
+        }
+        handler.postDelayed(watchdogRunnable!!, 8000)
+    }
+
+    private fun cancelVideoWatchdog() {
+        watchdogRunnable?.let { handler.removeCallbacks(it) }
+        watchdogRunnable = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +107,7 @@ class PlayerFragment : Fragment() {
         val webView = binding.webView
         webView.isFocusable = false
         webView.isFocusableInTouchMode = false
+        webView.addJavascriptInterface(AndroidBridge(), "AndroidBridge")
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
@@ -93,7 +131,6 @@ class PlayerFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 injectPlayerScript(view)
-                tvModel?.setErrInfo("")
             }
 
             override fun onReceivedError(
@@ -111,7 +148,7 @@ class PlayerFragment : Fragment() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if (newProgress > 40) {
+                if (newProgress > 30) {
                     injectPlayerScript(view)
                 }
             }
@@ -125,7 +162,9 @@ class PlayerFragment : Fragment() {
             header, .header, .nav, footer, .footer, .recommend, .comment,
             .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
             .share-box, .banner, .video-info, .player-control-top, .app-guide,
-            #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box {
+            #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box,
+            .txp_none, .txp_shadow, .txp_layer_title, .txp_layer_controls,
+            .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side {
                 display: none !important;
             }
             html, body {
@@ -150,36 +189,60 @@ class PlayerFragment : Fragment() {
 
         val jsCode = """
             (function() {
-                var s = document.getElementById('mytv-style');
+                var styleId = 'mytv-clean-style';
+                var s = document.getElementById(styleId);
                 if (!s) {
                     s = document.createElement('style');
-                    s.id = 'mytv-style';
+                    s.id = styleId;
                     s.innerHTML = '$css';
-                    document.head.appendChild(s);
+                    (document.head || document.documentElement).appendChild(s);
                 }
-                var v = document.querySelector('video');
-                if (v) {
+
+                function tryPlay(v) {
+                    if (!v) return;
                     v.muted = false;
                     if (v.paused) {
-                        v.play().catch(function(e){ console.log('play error', e); });
+                        var p = v.play();
+                        if (p && p.catch) {
+                            p.catch(function() {
+                                v.muted = true;
+                                v.play().then(function() {
+                                    setTimeout(function() { v.muted = false; }, 300);
+                                }).catch(function(){});
+                            });
+                        }
+                    }
+                    if (v.currentTime > 0 || !v.paused) {
+                        if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
+                            window.AndroidBridge.onVideoReady();
+                        }
                     }
                 }
+
+                var cnt = 0;
+                var poll = setInterval(function() {
+                    cnt++;
+                    var v = document.querySelector('video');
+                    if (v) {
+                        tryPlay(v);
+                        if (v.currentTime > 0.5) {
+                            clearInterval(poll);
+                        }
+                    }
+                    if (cnt > 40) {
+                        clearInterval(poll);
+                    }
+                }, 250);
+
+                document.addEventListener('playing', function(e) {
+                    if (e.target && e.target.tagName === 'VIDEO') {
+                        tryPlay(e.target);
+                    }
+                }, true);
             })();
         """.trimIndent()
 
         view.evaluateJavascript(jsCode, null)
-
-        if (defaultPlayerJs == null) {
-            try {
-                defaultPlayerJs =
-                    context?.assets?.open("default_player.js")?.bufferedReader()?.use { it.readText() }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to read default_player.js", e)
-            }
-        }
-        defaultPlayerJs?.let {
-            view.evaluateJavascript(it, null)
-        }
     }
 
     @OptIn(UnstableApi::class)
@@ -308,13 +371,27 @@ class PlayerFragment : Fragment() {
             player?.stop()
             binding.playerView.visibility = View.GONE
             binding.webView.visibility = View.VISIBLE
+            binding.webView.alpha = 0f
+            cancelVideoWatchdog()
+            binding.webView.stopLoading()
+            binding.webView.evaluateJavascript(
+                "try { document.querySelectorAll('video').forEach(function(v){ v.pause(); v.src = ''; }); } catch(e){}",
+                null
+            )
             binding.webView.loadUrl(url)
             tvModel.setErrInfo("")
+            startVideoWatchdog()
             return
         }
 
         // Direct stream -> ExoPlayer
         isUsingWebView = false
+        cancelVideoWatchdog()
+        binding.webView.stopLoading()
+        binding.webView.evaluateJavascript(
+            "try { document.querySelectorAll('video').forEach(function(v){ v.pause(); v.src = ''; }); } catch(e){}",
+            null
+        )
         binding.webView.visibility = View.GONE
         binding.playerView.visibility = View.VISIBLE
 
@@ -428,6 +505,7 @@ class PlayerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelVideoWatchdog()
         player?.release()
         try {
             binding.webView.destroy()

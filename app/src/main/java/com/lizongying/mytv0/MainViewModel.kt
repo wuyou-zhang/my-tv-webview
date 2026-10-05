@@ -116,7 +116,7 @@ class MainViewModel : ViewModel() {
 
         cacheChannels = getCache()
 
-        if (cacheChannels.isEmpty() || !cacheChannels.contains("央视频(手机)") || !cacheChannels.contains("超清")) {
+        if (cacheChannels.isEmpty() || !cacheChannels.contains("齐鲁频道") || !cacheChannels.contains("央视频道")) {
             Log.i(TAG, "cacheChannels isEmpty or old, reloading from raw")
             cacheChannels =
                 context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader()

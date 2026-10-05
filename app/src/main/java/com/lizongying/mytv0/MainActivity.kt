@@ -313,10 +313,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            if (!menuFragment.isAdded || menuFragment.isHidden) {
-                viewModel.groupModel.getCurrent()?.let {
-                    infoFragment.show(it)
+            if (menuFragment.isAdded && !menuFragment.isHidden) {
+                val menuWidth = menuFragment.view?.width ?: (screenWidth / 3)
+                if (e.x > menuWidth) {
+                    toggleMenu()
                 }
+            } else {
+                toggleMenu()
             }
             return true
         }
