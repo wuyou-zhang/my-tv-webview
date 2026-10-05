@@ -62,6 +62,9 @@ class PlayerFragment : Fragment() {
 
     fun onVideoPlaying() {
         cancelVideoWatchdog()
+        if (isUsingWebView && _binding != null) {
+            binding.webView.alpha = 1f
+        }
         tvModel?.setErrInfo("")
     }
 
@@ -69,6 +72,7 @@ class PlayerFragment : Fragment() {
         cancelVideoWatchdog()
         watchdogRunnable = Runnable {
             if (isUsingWebView && _binding != null) {
+                binding.webView.alpha = 1f
                 tvModel?.setErrInfo("")
                 injectPlayerScript(binding.webView)
             }
@@ -99,6 +103,7 @@ class PlayerFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         val webView = binding.webView
+        webView.setBackgroundColor(android.graphics.Color.BLACK)
         webView.isFocusable = false
         webView.isFocusableInTouchMode = false
         webView.addJavascriptInterface(AndroidBridge(), "AndroidBridge")
@@ -122,9 +127,19 @@ class PlayerFragment : Fragment() {
                 injectPlayerScript(view)
             }
 
+            override fun onPageCommitVisible(view: WebView?, url: String?) {
+                super.onPageCommitVisible(view, url)
+                injectPlayerScript(view)
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 injectPlayerScript(view)
+                activity?.runOnUiThread {
+                    if (isUsingWebView && _binding != null) {
+                        binding.webView.alpha = 1f
+                    }
+                }
             }
 
             override fun onReceivedError(
@@ -142,7 +157,7 @@ class PlayerFragment : Fragment() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if (newProgress > 30) {
+                if (newProgress > 25) {
                     injectPlayerScript(view)
                 }
             }
@@ -153,12 +168,28 @@ class PlayerFragment : Fragment() {
         if (view == null) return
 
         val css = """
+            video::-webkit-media-controls,
+            video::-webkit-media-controls-panel,
+            video::-webkit-media-controls-enclosure,
+            video::-webkit-media-controls-overlay-play-button,
+            video::-webkit-media-controls-start-playback-button,
+            video::-webkit-media-controls-play-button,
+            video::-webkit-media-controls-timeline,
+            video::-webkit-media-controls-current-time-display,
+            video::-webkit-media-controls-time-remaining-display,
+            video::-webkit-media-controls-mute-button,
+            video::-webkit-media-controls-volume-slider,
+            video::-webkit-media-controls-fullscreen-button {
+                display: none !important;
+            }
             header, .header, .nav, footer, .footer, .recommend, .comment,
             .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
             .share-box, .banner, .video-info, .player-control-top, .app-guide,
             #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box,
             .txp_none, .txp_shadow, .txp_layer_title, .txp_layer_controls,
-            .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side {
+            .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side,
+            .home-side-bar, .channel-side-bar, .live-channel-list, .side-bar-wrap,
+            .ysp-home-sidebar, .sidebar-content, .cctv-side-bar, [class*="sidebar"], [class*="SideBar"] {
                 display: none !important;
             }
             html, body {
@@ -168,6 +199,15 @@ class PlayerFragment : Fragment() {
                 overflow: hidden !important;
                 width: 100vw !important;
                 height: 100vh !important;
+            }
+            #player, .player, .player-container, .mod_player, .txp_player {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                z-index: 100000 !important;
+                background: #000 !important;
             }
             video {
                 position: fixed !important;
@@ -192,8 +232,12 @@ class PlayerFragment : Fragment() {
                     (document.head || document.documentElement).appendChild(s);
                 }
 
-                function tryPlay(v) {
+                function setupVideo(v) {
                     if (!v) return;
+                    v.removeAttribute('controls');
+                    v.controls = false;
+                    v.setAttribute('poster', '');
+                    v.poster = '';
                     v.muted = false;
                     if (v.paused) {
                         var p = v.play();
@@ -206,10 +250,22 @@ class PlayerFragment : Fragment() {
                             });
                         }
                     }
-                    if (v.currentTime > 0 || !v.paused) {
+                    if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || !v.paused)) {
                         if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
                             window.AndroidBridge.onVideoReady();
                         }
+                    }
+                    if (!v.__mytv_bound) {
+                        v.__mytv_bound = true;
+                        ['playing', 'timeupdate', 'canplay'].forEach(function(ev) {
+                            v.addEventListener(ev, function() {
+                                if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || !v.paused)) {
+                                    if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
+                                        window.AndroidBridge.onVideoReady();
+                                    }
+                                }
+                            });
+                        });
                     }
                 }
 
@@ -218,7 +274,7 @@ class PlayerFragment : Fragment() {
                     cnt++;
                     var v = document.querySelector('video');
                     if (v) {
-                        tryPlay(v);
+                        setupVideo(v);
                         if (v.currentTime > 0.5) {
                             clearInterval(poll);
                         }
@@ -230,7 +286,7 @@ class PlayerFragment : Fragment() {
 
                 document.addEventListener('playing', function(e) {
                     if (e.target && e.target.tagName === 'VIDEO') {
-                        tryPlay(e.target);
+                        setupVideo(e.target);
                     }
                 }, true);
             })();
@@ -365,7 +421,7 @@ class PlayerFragment : Fragment() {
             player?.stop()
             binding.playerView.visibility = View.GONE
             binding.webView.visibility = View.VISIBLE
-            binding.webView.alpha = 1f
+            binding.webView.alpha = 0f
             cancelVideoWatchdog()
             binding.webView.stopLoading()
             binding.webView.evaluateJavascript(
