@@ -166,6 +166,8 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             Log.e(TAG, "viewModel is not initialized")
             return
         }
+        updateList(position)
+        (activity as MainActivity).menuActive()
     }
 
     override fun onItemClicked(position: Int, type: String) {
@@ -244,6 +246,7 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
         }
 
         (activity as MainActivity).menuActive()
+        view?.bringToFront()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

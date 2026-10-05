@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:clickable="true"
     android:focusable="false"
+    android:elevation="20dp"
     >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/group"

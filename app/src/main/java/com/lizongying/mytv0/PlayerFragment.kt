@@ -68,6 +68,8 @@ class PlayerFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         val webView = binding.webView
+        webView.isFocusable = false
+        webView.isFocusableInTouchMode = false
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true

@@ -107,6 +107,8 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.init(this)
 
+        gestureDetector = GestureDetector(this, GestureListener(this))
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.main_browse_fragment, playerFragment)
@@ -126,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         if (ok == 2) {
             Log.i(TAG, "all ready")
 
-            gestureDetector = GestureDetector(this, GestureListener(this))
+            // gestureDetector initialized in onCreate
 
             viewModel.groupModel.change.observe(this) { _ ->
                 Log.i(TAG, "group changed")
@@ -278,8 +280,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (this::gestureDetector.isInitialized && ev != null) {
+            gestureDetector.onTouchEvent(ev)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event != null) {
+        if (this::gestureDetector.isInitialized && event != null) {
             gestureDetector.onTouchEvent(event)
         }
         return super.onTouchEvent(event)
@@ -304,12 +313,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            showFragment(menuFragment)
+            if (!menuFragment.isAdded || menuFragment.isHidden) {
+                viewModel.groupModel.getCurrent()?.let {
+                    infoFragment.show(it)
+                }
+            }
             return true
         }
 
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            showSetting()
+            toggleMenu()
             return true
         }
 
@@ -493,6 +506,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun toggleMenu() {
+        if (settingFragment.isAdded && !settingFragment.isHidden) {
+            hideFragment(settingFragment)
+            return
+        }
+        if (!menuFragment.isAdded || menuFragment.isHidden) {
+            showFragment(menuFragment)
+            menuActive()
+        } else {
+            hideFragment(menuFragment)
+        }
+    }
+
     private fun showFragment(fragment: Fragment) {
         if (!isSafeToPerformFragmentTransactions) {
             return
@@ -506,12 +532,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!fragment.isHidden) {
+            fragment.view?.bringToFront()
             return
         }
 
         supportFragmentManager.beginTransaction()
             .show(fragment)
             .commitAllowingStateLoss()
+        fragment.view?.bringToFront()
     }
 
     private fun hideFragment(fragment: Fragment) {

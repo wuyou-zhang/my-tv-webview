@@ -106,7 +106,7 @@ class MainViewModel : ViewModel() {
         imageHelper = application.imageHelper
 
         groupModel.addTVListModel(TVListModel("我的收藏", 0))
-        groupModel.addTVListModel(TVListModel("全部頻道", 1))
+        groupModel.addTVListModel(TVListModel("全部频道", 1))
 
         appDirectory = context.filesDir
         cacheFile = File(appDirectory, CACHE_FILE_NAME)
@@ -116,7 +116,7 @@ class MainViewModel : ViewModel() {
 
         cacheChannels = getCache()
 
-        if (cacheChannels.isEmpty() || !cacheChannels.contains("yangshipin")) {
+        if (cacheChannels.isEmpty() || !cacheChannels.contains("央视频(手机)") || !cacheChannels.contains("超清")) {
             Log.i(TAG, "cacheChannels isEmpty or old, reloading from raw")
             cacheChannels =
                 context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader()

@@ -118,7 +118,7 @@ class ListAdapter(
             view.onFocusChangeListener = onFocusChangeListener
 
             view.setOnClickListener { _ ->
-                listener?.onItemClicked(position)
+                listener?.onItemClicked(position, "list")
             }
 
             view.setOnTouchListener(object : View.OnTouchListener {
