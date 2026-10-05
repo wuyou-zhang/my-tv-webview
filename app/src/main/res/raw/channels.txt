@@ -968,5 +968,35 @@
       "https://www.yangshipin.cn/tv/home?pid=600190737"
     ],
     "logo": "https://live.fanmingming.cn/tv/宁夏卫视.png"
+  },
+  {
+    "id": 97,
+    "name": "湖南国际",
+    "title": "湖南国际频道",
+    "group": "湖南",
+    "uris": [
+      "https://www.mgtv.com/live/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/湖南国际.png"
+  },
+  {
+    "id": 98,
+    "name": "长沙新闻",
+    "title": "长沙新闻综合",
+    "group": "湖南",
+    "uris": [
+      "https://www.changsha.cn/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/长沙新闻.png"
+  },
+  {
+    "id": 99,
+    "name": "长沙政法",
+    "title": "长沙政法频道",
+    "group": "湖南",
+    "uris": [
+      "https://www.changsha.cn/"
+    ],
+    "logo": "https://live.fanmingming.cn/tv/长沙政法.png"
   }
 ]
