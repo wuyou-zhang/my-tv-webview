@@ -116,11 +116,12 @@ class MainViewModel : ViewModel() {
 
         cacheChannels = getCache()
 
-        if (cacheChannels.isEmpty()) {
-            Log.i(TAG, "cacheChannels isEmpty")
+        if (cacheChannels.isEmpty() || !cacheChannels.contains("yangshipin")) {
+            Log.i(TAG, "cacheChannels isEmpty or old, reloading from raw")
             cacheChannels =
                 context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader()
                     .use { it.readText() }
+            cacheFile?.writeText(cacheChannels)
         }
 
         Log.i(TAG, "cacheChannels $cacheFile $cacheChannels")

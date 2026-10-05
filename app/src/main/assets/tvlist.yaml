@@ -1,0 +1,348 @@
+# 其他配置 + 电视分组 + 电视真实url
+
+NOTICE: |
+  公告： 支持多行显示
+  第二行公告
+
+# 缓存数据时间
+CACHE_TTL: 3600
+
+
+TV-GROUP:
+  - 央视频(手机):
+      - CCTV-4k:
+          url: https://www.yangshipin.cn/tv/home?pid=600002264
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-1:
+          url: https://www.yangshipin.cn/tv/home?pid=600001859
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-2:
+          url: https://www.yangshipin.cn/tv/home?pid=600001800
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-3:
+          url: https://www.yangshipin.cn/tv/home?pid=600001801
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-4:
+          url: https://www.yangshipin.cn/tv/home?pid=600001814
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-5:
+          url: https://www.yangshipin.cn/tv/home?pid=600001818
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-5+:
+          url: https://www.yangshipin.cn/tv/home?pid=600001817
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-6:
+          url: https://www.yangshipin.cn/tv/home?pid=600108442
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-7:
+          url: https://www.yangshipin.cn/tv/home?pid=600004092
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-8:
+          url: https://www.yangshipin.cn/tv/home?pid=600001803
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-9:
+          url: https://www.yangshipin.cn/tv/home?pid=600004078
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-10:
+          url: https://www.yangshipin.cn/tv/home?pid=600001805
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-11:
+          url: https://www.yangshipin.cn/tv/home?pid=600001806
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-12:
+          url: https://www.yangshipin.cn/tv/home?pid=600001807
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-13:
+          url: https://www.yangshipin.cn/tv/home?pid=600001811
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-14:
+          url: https://www.yangshipin.cn/tv/home?pid=600001809
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-15:
+          url: https://www.yangshipin.cn/tv/home?pid=600001815
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-16:
+          url: https://www.yangshipin.cn/tv/home?pid=600098637
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CCTV-17:
+          url: https://www.yangshipin.cn/tv/home?pid=600001810
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 北京卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002309
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 江苏卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002521
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 东方卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002483
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 浙江卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002520
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 湖南卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002475
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 湖北卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002508
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 广东卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002485
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 广西卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002509
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 黑龙江卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002498
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 海南卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002506
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 重庆卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002531
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 深圳卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002481
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 四川卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002516
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 河南卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002525
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 东南卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002484
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 贵州卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002490
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 江西卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002503
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 辽宁卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002505
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 安徽卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002532
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 河北卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002493
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 山东卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600002513
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 天津卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600152137
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 吉林卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190405
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 陕西卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190400
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 甘肃卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190408
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 宁夏卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190737
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 内蒙古卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190401
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 云南卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190402
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 山西卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190407
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 青海卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190406
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - 西藏卫视:
+          url: https://www.yangshipin.cn/tv/home?pid=600190403
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN:
+          url: https://www.yangshipin.cn/tv/home?pid=600014550
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN法语频道:
+          url: https://www.yangshipin.cn/tv/home?pid=600084704
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN俄语频道:
+          url: https://www.yangshipin.cn/tv/home?pid=600084758
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN阿拉伯语频道:
+          url: https://www.yangshipin.cn/tv/home?pid=600084782
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN西班牙语频道:
+          url: https://www.yangshipin.cn/tv/home?pid=600084744
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false
+      - CGTN外语记录频道:
+          url: https://www.yangshipin.cn/tv/home?pid=600084781
+          js_ttl: 3600
+          user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          timeout: 0
+          allow_focus: false

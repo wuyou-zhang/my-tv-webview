@@ -1,5 +1,8 @@
 package com.lizongying.mytv0
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -31,12 +40,15 @@ class PlayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var player: ExoPlayer? = null
+    private var isUsingWebView = false
 
     private var tvModel: TVModel? = null
     private val aspectRatio = 16f / 9f
 
     private val handler = Handler(Looper.myLooper()!!)
     private val delayHideVolume = 2 * 1000L
+
+    private var defaultPlayerJs: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +60,124 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupWebView()
         updatePlayer()
         (activity as MainActivity).ready(TAG)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView() {
+        val webView = binding.webView
+        val settings = webView.settings
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        settings.databaseEnabled = true
+        settings.mediaPlaybackRequiresUserGesture = false
+        settings.useWideViewPort = true
+        settings.loadWithOverviewMode = true
+        settings.allowFileAccess = true
+        settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        settings.cacheMode = WebSettings.LOAD_DEFAULT
+        // Use Chrome Desktop User-Agent for Yangshipin to load video player directly
+        settings.userAgentString =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                injectPlayerScript(view)
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                injectPlayerScript(view)
+                tvModel?.setErrInfo("")
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                if (request?.isForMainFrame == true) {
+                    Log.e(TAG, "WebView error: ${error?.description}")
+                }
+            }
+        }
+
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                super.onProgressChanged(view, newProgress)
+                if (newProgress > 40) {
+                    injectPlayerScript(view)
+                }
+            }
+        }
+    }
+
+    private fun injectPlayerScript(view: WebView?) {
+        if (view == null) return
+
+        val css = """
+            header, .header, .nav, footer, .footer, .recommend, .comment,
+            .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
+            .share-box, .banner, .video-info, .player-control-top, .app-guide,
+            #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box {
+                display: none !important;
+            }
+            html, body {
+                background: #000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            video {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                z-index: 2147483647 !important;
+                object-fit: contain !important;
+                background: #000 !important;
+            }
+        """.trimIndent().replace("\n", " ").replace("'", "\\'")
+
+        val jsCode = """
+            (function() {
+                var s = document.getElementById('mytv-style');
+                if (!s) {
+                    s = document.createElement('style');
+                    s.id = 'mytv-style';
+                    s.innerHTML = '$css';
+                    document.head.appendChild(s);
+                }
+                var v = document.querySelector('video');
+                if (v) {
+                    v.muted = false;
+                    if (v.paused) {
+                        v.play().catch(function(e){ console.log('play error', e); });
+                    }
+                }
+            })();
+        """.trimIndent()
+
+        view.evaluateJavascript(jsCode, null)
+
+        if (defaultPlayerJs == null) {
+            try {
+                defaultPlayerJs =
+                    context?.assets?.open("default_player.js")?.bufferedReader()?.use { it.readText() }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to read default_player.js", e)
+            }
+        }
+        defaultPlayerJs?.let {
+            view.evaluateJavascript(it, null)
+        }
     }
 
     @OptIn(UnstableApi::class)
@@ -60,7 +188,6 @@ class PlayerFragment : Fragment() {
         }
 
         val ctx = requireContext()
-
         val playerView = binding.playerView
 
         val renderersFactory = DefaultRenderersFactory(ctx)
@@ -70,9 +197,7 @@ class PlayerFragment : Fragment() {
             if (SP.softDecode) DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER else DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON
         )
 
-        if (player != null) {
-            player?.release()
-        }
+        player?.release()
 
         player = ExoPlayer.Builder(ctx)
             .setRenderersFactory(renderersFactory)
@@ -169,9 +294,29 @@ class PlayerFragment : Fragment() {
     @OptIn(UnstableApi::class)
     fun play(tvModel: TVModel) {
         this.tvModel = tvModel
-        player?.run {
-            tvModel.getVideoUrl() ?: return
+        val url = tvModel.getVideoUrl() ?: return
+        Log.i(TAG, "play url: $url")
 
+        // If it's a web URL (e.g. yangshipin.cn, cctv.com), play via WebView
+        val isWebUrl = (url.startsWith("http://") || url.startsWith("https://")) &&
+                !url.contains(".m3u8") && !url.contains(".mp4") && !url.contains(".flv")
+
+        if (isWebUrl) {
+            isUsingWebView = true
+            player?.stop()
+            binding.playerView.visibility = View.GONE
+            binding.webView.visibility = View.VISIBLE
+            binding.webView.loadUrl(url)
+            tvModel.setErrInfo("")
+            return
+        }
+
+        // Direct stream -> ExoPlayer
+        isUsingWebView = false
+        binding.webView.visibility = View.GONE
+        binding.playerView.visibility = View.VISIBLE
+
+        player?.run {
             while (true) {
                 val last = tvModel.isLastVideo()
                 val mediaItem = tvModel.getMediaItem()
@@ -262,7 +407,9 @@ class PlayerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (player?.isPlaying == false) {
+        if (isUsingWebView) {
+            binding.webView.onResume()
+        } else if (player?.isPlaying == false) {
             player?.prepare()
             player?.play()
         }
@@ -270,7 +417,9 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        if (player?.isPlaying == true) {
+        if (isUsingWebView) {
+            binding.webView.onPause()
+        } else if (player?.isPlaying == true) {
             player?.stop()
         }
     }
@@ -278,6 +427,9 @@ class PlayerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         player?.release()
+        try {
+            binding.webView.destroy()
+        } catch (_: Exception) {}
     }
 
     override fun onDestroyView() {
