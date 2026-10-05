@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.lizongying.mytv0"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.lizongying.mytv0"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 34
         versionCode = getVersionCode()
         versionName = getVersionName()
     }
