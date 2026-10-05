@@ -116,7 +116,7 @@ class MainViewModel : ViewModel() {
 
         cacheChannels = getCache()
 
-        if (cacheChannels.isEmpty() || !cacheChannels.contains("齐鲁频道") || !cacheChannels.contains("CGTN 法语频道") || cacheChannels.contains("金鹰卡通") || cacheChannels.contains("宁夏")) {
+        if (cacheChannels.isEmpty() || !cacheChannels.contains("齐鲁频道") || !cacheChannels.contains("CGTN 法语频道") || !cacheChannels.contains("金鹰卡通") || cacheChannels.contains("宁夏")) {
             Log.i(TAG, "cacheChannels isEmpty or old, reloading from raw")
             cacheChannels =
                 context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader()
