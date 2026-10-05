@@ -77,7 +77,7 @@ class PlayerFragment : Fragment() {
                 injectPlayerScript(binding.webView)
             }
         }
-        handler.postDelayed(watchdogRunnable!!, 8000)
+        handler.postDelayed(watchdogRunnable!!, 2000)
     }
 
     private fun cancelVideoWatchdog() {
@@ -136,6 +136,11 @@ class PlayerFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 injectPlayerScript(view)
+                handler.postDelayed({
+                    if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
+                        onVideoPlaying()
+                    }
+                }, 1500)
             }
 
             override fun onReceivedError(
@@ -247,19 +252,17 @@ class PlayerFragment : Fragment() {
                             });
                         }
                     }
-                    if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || v.webkitDecodedFrameCount > 0)) {
+                    if ((v.readyState >= 2 && v.currentTime > 0.05) || (!v.paused && v.currentTime > 0) || v.videoWidth > 0) {
                         if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
                             window.AndroidBridge.onVideoReady();
                         }
                     }
                     if (!v.__mytv_bound) {
                         v.__mytv_bound = true;
-                        ['playing', 'timeupdate', 'canplay'].forEach(function(ev) {
+                        ['playing', 'timeupdate', 'canplay', 'loadeddata'].forEach(function(ev) {
                             v.addEventListener(ev, function() {
-                                if (v.readyState >= 2 && v.currentTime > 0.1 && (v.videoWidth > 0 || v.webkitDecodedFrameCount > 0)) {
-                                    if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
-                                        window.AndroidBridge.onVideoReady();
-                                    }
+                                if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
+                                    window.AndroidBridge.onVideoReady();
                                 }
                             });
                         });

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.lizongying.mytv0.databinding.LoadingBinding
 
@@ -19,8 +20,9 @@ class LoadingFragment : Fragment() {
 
         val application = requireActivity().applicationContext as MyTVApplication
 
-        binding.bar.layoutParams.width = application.px2Px(binding.bar.layoutParams.width)
-        binding.bar.layoutParams.height = application.px2Px(binding.bar.layoutParams.height)
+        val bar: ProgressBar = binding.bar
+        bar.layoutParams.width = application.px2Px(bar.layoutParams.width)
+        bar.layoutParams.height = application.px2Px(bar.layoutParams.height)
 
         return binding.root
     }
