@@ -68,6 +68,7 @@ class InfoFragment : Fragment() {
         binding.channelNum.text = channelNum.toString()
 
         handler.removeCallbacks(removeRunnable)
+        view?.bringToFront()
         view?.visibility = View.VISIBLE
         handler.postDelayed(removeRunnable, delay)
     }

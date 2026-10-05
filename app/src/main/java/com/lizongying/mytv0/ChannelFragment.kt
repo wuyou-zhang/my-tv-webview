@@ -67,6 +67,7 @@ class ChannelFragment : Fragment() {
             binding.content.text =
                 if (tv.number == -1) (tv.id.plus(1)).toString() else tv.number.toString()
         }
+        view?.bringToFront()
         view?.visibility = View.VISIBLE
         channel = 0
         channelCount = 0
@@ -89,6 +90,7 @@ class ChannelFragment : Fragment() {
         handler.removeCallbacks(playRunnable)
         Log.d(TAG, "channelCount $channelCount")
         binding.content.text = "${this.channel}"
+        view?.bringToFront()
         view?.visibility = View.VISIBLE
         if (channelCount < 3) {
             handler.postDelayed(playRunnable, delay)

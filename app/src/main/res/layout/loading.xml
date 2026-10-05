@@ -12,10 +12,12 @@
         android:layout_height="match_parent"
         android:gravity="center" >
 
-        <androidx.core.widget.ContentLoadingProgressBar
+        <ProgressBar
             android:id="@+id/bar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:indeterminateTint="@color/white"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white"
+            android:indeterminateTintMode="src_in" />
     </LinearLayout>
 </FrameLayout>

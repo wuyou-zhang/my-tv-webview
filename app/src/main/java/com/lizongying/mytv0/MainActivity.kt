@@ -263,6 +263,8 @@ class MainActivity : AppCompatActivity() {
                     playerFragment.play(tvModel)
                     infoFragment.show(tvModel)
                     channelFragment.show(tvModel)
+                    infoFragment.view?.bringToFront()
+                    channelFragment.view?.bringToFront()
                 }
             }
 
@@ -558,6 +560,10 @@ class MainActivity : AppCompatActivity() {
 
         if (!fragment.isHidden) {
             fragment.view?.bringToFront()
+            if (fragment == loadingFragment) {
+                infoFragment.view?.bringToFront()
+                channelFragment.view?.bringToFront()
+            }
             return
         }
 
@@ -565,6 +571,10 @@ class MainActivity : AppCompatActivity() {
             .show(fragment)
             .commitAllowingStateLoss()
         fragment.view?.bringToFront()
+        if (fragment == loadingFragment) {
+            infoFragment.view?.bringToFront()
+            channelFragment.view?.bringToFront()
+        }
     }
 
     private fun hideFragment(fragment: Fragment) {
