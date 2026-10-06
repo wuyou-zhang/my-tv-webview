@@ -13,8 +13,14 @@ android {
         applicationId = "com.lizongying.mytv.local"
         minSdk = 21
         targetSdk = 34
-        versionCode = getVersionCode()
-        versionName = getVersionName()
+        versionCode = 1
+        versionName = "1.0.0"
+    }
+
+    applicationVariants.all {
+        outputs.all {
+            (this as? com.android.build.gradle.internal.api.BaseVariantOutputImpl)?.outputFileName = "我的电视 本地版.apk"
+        }
     }
 
     buildFeatures {
@@ -40,31 +46,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-}
-
-fun getTag(): String {
-    return try {
-        val process = Runtime.getRuntime().exec("git describe --tags --always")
-        process.waitFor()
-        process.inputStream.bufferedReader().use(BufferedReader::readText).trim().removePrefix("v")
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun getVersionCode(): Int {
-    return try {
-        val arr = (getTag().replace(".", " ").replace("-", " ") + " 0").split(" ")
-        arr[0].toInt() * 16777216 + arr[1].toInt() * 65536 + arr[2].toInt() * 256 + arr[3].toInt()
-    } catch (_: Exception) {
-        1
-    }
-}
-
-fun getVersionName(): String {
-    return getTag().ifEmpty {
-        "0.0.0-1"
     }
 }
 

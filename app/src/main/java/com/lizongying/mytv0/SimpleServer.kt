@@ -309,6 +309,6 @@ class SimpleServer(private val context: Context, private val viewModel: MainView
 
     companion object {
         const val TAG = "SimpleServer"
-        const val PORT = 34567
+        const val PORT = 34568
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonSyntaxException
 import com.lizongying.mytv0.ImageHelper
+import com.lizongying.mytv0.LocalMediaScanner
 import com.lizongying.mytv0.MyTVApplication
 import com.lizongying.mytv0.R
 import com.lizongying.mytv0.SP
@@ -114,14 +115,22 @@ class MainViewModel : ViewModel() {
             cacheFile!!.createNewFile()
         }
 
-        cacheChannels = getCache()
+        val rawChannels = context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader().use { it.readText() }
+        val rawChannelsHash = rawChannels.hashCode().toString()
+        val prefs = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val savedHash = prefs.getString("channels_raw_hash", "")
 
-        if (cacheChannels.isEmpty() || !cacheChannels.contains("齐鲁频道") || !cacheChannels.contains("CGTN 法语频道") || !cacheChannels.contains("金鹰卡通") || cacheChannels.contains("宁夏")) {
-            Log.i(TAG, "cacheChannels isEmpty or old, reloading from raw")
-            cacheChannels =
-                context.resources.openRawResource(DEFAULT_CHANNELS_FILE).bufferedReader()
-                    .use { it.readText() }
+        if (savedHash != rawChannelsHash || SP.configUrl.isNullOrEmpty()) {
+            Log.i(TAG, "Reloading channels from raw resource (hash mismatch or empty configUrl)")
+            cacheChannels = rawChannels
             cacheFile?.writeText(cacheChannels)
+            prefs.edit().putString("channels_raw_hash", rawChannelsHash).apply()
+        } else {
+            cacheChannels = getCache()
+            if (cacheChannels.isEmpty()) {
+                cacheChannels = rawChannels
+                cacheFile?.writeText(cacheChannels)
+            }
         }
 
         Log.i(TAG, "cacheChannels $cacheFile $cacheChannels")
@@ -323,6 +332,18 @@ class MainViewModel : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
             R.string.channel_read_error.showToast()
+        }
+    }
+
+    fun reloadChannels(force: Boolean = false) {
+        val str = if (cacheChannels.isNotEmpty()) cacheChannels else getCache()
+        if (str.isNotEmpty()) {
+            val oldInitialized = initialized
+            if (force) {
+                initialized = false
+            }
+            str2Channels(str)
+            initialized = oldInitialized || force
         }
     }
 
@@ -548,10 +569,18 @@ class MainViewModel : ViewModel() {
             }
         }
 
+        val localList: List<TV> = try {
+            LocalMediaScanner.scan(MyTVApplication.getInstance())
+        } catch (e: Exception) {
+            Log.e(TAG, "Error scanning local media", e)
+            emptyList()
+        }
+        val combinedList = list + localList
+
         groupModel.initTVGroup()
 
         val map: MutableMap<String, MutableList<TVModel>> = mutableMapOf()
-        for (v in list) {
+        for (v in combinedList) {
             if (v.group !in map) {
                 map[v.group] = mutableListOf()
             }

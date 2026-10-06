@@ -67,6 +67,29 @@ class InfoFragment : Fragment() {
         val channelNum = if (tv.number == -1) tv.id.plus(1) else tv.number
         binding.channelNum.text = channelNum.toString()
 
+        if (tvModel.isLocalVideo()) {
+            val epIndex = tvModel.videoIndexValue
+            val total = tv.uris.size
+            var epName = "第 ${epIndex + 1} 集 / 共 $total 集"
+            try {
+                val url = tvModel.getVideoUrl()
+                if (url != null) {
+                    val filePath = if (url.startsWith("file://")) url.removePrefix("file://") else url
+                    val fileName = java.io.File(filePath).nameWithoutExtension
+                    if (fileName.isNotEmpty()) {
+                        epName = "${epIndex + 1}/$total: $fileName"
+                    }
+                }
+            } catch (_: Exception) {}
+            binding.desc.text = epName
+            binding.desc.visibility = View.VISIBLE
+        } else if (!tv.description.isNullOrEmpty()) {
+            binding.desc.text = tv.description
+            binding.desc.visibility = View.VISIBLE
+        } else {
+            binding.desc.visibility = View.GONE
+        }
+
         handler.removeCallbacks(removeRunnable)
         view?.bringToFront()
         view?.visibility = View.VISIBLE

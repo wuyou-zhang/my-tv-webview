@@ -71,13 +71,20 @@ class PlayerFragment : Fragment() {
     private fun startVideoWatchdog() {
         cancelVideoWatchdog()
         watchdogRunnable = Runnable {
-            if (isUsingWebView && _binding != null) {
-                binding.webView.alpha = 1f
-                tvModel?.setErrInfo("")
-                injectPlayerScript(binding.webView)
+            if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
+                Log.w(TAG, "Watchdog timeout: video did not report ready within 12s")
+                binding.webView.evaluateJavascript(
+                    "try { var v = document.querySelector('video'); if (v) { v.muted=true; v.play(); } } catch(e){}",
+                    null
+                )
+                handler.postDelayed({
+                    if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
+                        tvModel?.setErrInfo(R.string.play_error.getString())
+                    }
+                }, 3000)
             }
         }
-        handler.postDelayed(watchdogRunnable!!, 2000)
+        handler.postDelayed(watchdogRunnable!!, 12000)
     }
 
     private fun cancelVideoWatchdog() {
@@ -102,11 +109,13 @@ class PlayerFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
+        WebView.setWebContentsDebuggingEnabled(true)
         val webView = binding.webView
         webView.setBackgroundColor(android.graphics.Color.BLACK)
         webView.alpha = 0f
         webView.isFocusable = false
         webView.isFocusableInTouchMode = false
+        webView.setOnTouchListener { _, _ -> true }
         webView.addJavascriptInterface(AndroidBridge(), "AndroidBridge")
         val settings = webView.settings
         settings.javaScriptEnabled = true
@@ -136,11 +145,6 @@ class PlayerFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 injectPlayerScript(view)
-                handler.postDelayed({
-                    if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
-                        onVideoPlaying()
-                    }
-                }, 1500)
             }
 
             override fun onReceivedError(
@@ -161,6 +165,11 @@ class PlayerFragment : Fragment() {
                 if (newProgress > 25) {
                     injectPlayerScript(view)
                 }
+            }
+
+            override fun onConsoleMessage(consoleMessage: android.webkit.ConsoleMessage?): Boolean {
+                Log.i("WebConsole", "[${consoleMessage?.messageLevel()}] ${consoleMessage?.message()}")
+                return true
             }
         }
     }
@@ -183,12 +192,14 @@ class PlayerFragment : Fragment() {
             video::-webkit-media-controls-fullscreen-button {
                 display: none !important;
             }
-            header, .header, .nav, footer, .footer, .recommend, .comment,
-            .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
+            header, .header, nav, .nav, footer, .footer, .recommend, .comment,
+            aside, .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
             .share-box, .banner, .video-info, .player-control-top, .app-guide,
             #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box,
             .txp_none, .txp_shadow, .txp_layer_title, .txp_layer_controls,
             .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side,
+            .txp_overlay_play, .txp_center_play, .txp_big_play, .player_icon_play,
+            .txp_pop, .txp_toast, .txp_watermark,
             .home-side-bar, .channel-side-bar, .live-channel-list, .side-bar-wrap,
             .ysp-home-sidebar, .sidebar-content, .cctv-side-bar, [class*="sidebar"], [class*="SideBar"] {
                 display: none !important;
@@ -212,14 +223,20 @@ class PlayerFragment : Fragment() {
                 background: #000 !important;
             }
             video {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
+                max-width: 100vw !important;
+                max-height: 100vh !important;
                 z-index: 2147483647 !important;
                 object-fit: contain !important;
                 background: #000 !important;
+                background-color: #000 !important;
             }
         """.trimIndent().replace("\n", " ").replace("'", "\\'")
 
@@ -228,45 +245,179 @@ class PlayerFragment : Fragment() {
                 var styleId = 'mytv-clean-style';
                 var s = document.getElementById(styleId);
                 if (!s) {
-                    s = document.createElement('style');
-                    s.id = styleId;
-                    s.innerHTML = '$css';
-                    (document.head || document.documentElement).appendChild(s);
+                    var targetHead = document.head || document.documentElement || document.body;
+                    if (targetHead) {
+                        s = document.createElement('style');
+                        s.id = styleId;
+                        s.innerHTML = '$css';
+                        targetHead.appendChild(s);
+                    }
+                }
+
+                function getParam(name) {
+                    try {
+                        var params = new URLSearchParams(window.location.search);
+                        var val = params.get(name);
+                        if (val) return val;
+                        var reg = new RegExp('[?&]' + name + '=([^&#]*)');
+                        var match = window.location.href.match(reg);
+                        return match ? decodeURIComponent(match[1]) : null;
+                    } catch(e) { return null; }
+                }
+
+                var c1 = getParam('watch_video_click');
+                var c2 = getParam('watch_video_click2');
+                var hasClick = !!(c1 || c2);
+
+                if (typeof window.__mytv_click_done === 'undefined') {
+                    window.__mytv_click_done = !hasClick;
+                }
+
+                function enforceUnmute(v) {
+                    if (!v) return;
+                    try {
+                        if (v.muted || v.defaultMuted || v.hasAttribute('muted')) {
+                            v.muted = false;
+                            v.defaultMuted = false;
+                            v.removeAttribute('muted');
+                        }
+                        if (v.volume < 1) {
+                            v.volume = 1;
+                        }
+                    } catch(e) {}
+                }
+
+                var isReadyNotified = false;
+                function notifyReady() {
+                    if (isReadyNotified) return;
+                    if (!window.__mytv_click_done) return;
+                    isReadyNotified = true;
+                    if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
+                        window.AndroidBridge.onVideoReady();
+                    }
+                }
+
+                function checkAndNotify(v) {
+                    if (!v) return;
+                    if (!window.__mytv_click_done) return;
+                    if (!v.paused && v.currentTime > 0.1) {
+                        notifyReady();
+                    }
                 }
 
                 function setupVideo(v) {
                     if (!v) return;
-                    v.removeAttribute('controls');
-                    v.controls = false;
-                    v.setAttribute('poster', '');
-                    v.poster = '';
-                    v.muted = false;
+                    try {
+                        v.removeAttribute('controls');
+                        v.controls = false;
+                        v.setAttribute('poster', '');
+                        v.poster = '';
+                    } catch(e) {}
+
+                    enforceUnmute(v);
+
                     if (v.paused) {
                         var p = v.play();
                         if (p && p.catch) {
                             p.catch(function() {
                                 v.muted = true;
                                 v.play().then(function() {
-                                    setTimeout(function() { v.muted = false; }, 300);
+                                    setTimeout(function() { enforceUnmute(v); }, 300);
                                 }).catch(function(){});
                             });
                         }
                     }
-                    if ((v.readyState >= 2 && v.currentTime > 0.05) || (!v.paused && v.currentTime > 0) || v.videoWidth > 0) {
-                        if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
-                            window.AndroidBridge.onVideoReady();
-                        }
-                    }
+
+                    checkAndNotify(v);
+
                     if (!v.__mytv_bound) {
                         v.__mytv_bound = true;
-                        ['playing', 'timeupdate', 'canplay', 'loadeddata'].forEach(function(ev) {
+                        ['timeupdate', 'playing', 'canplay', 'loadeddata'].forEach(function(ev) {
                             v.addEventListener(ev, function() {
-                                if (window.AndroidBridge && window.AndroidBridge.onVideoReady) {
-                                    window.AndroidBridge.onVideoReady();
-                                }
+                                enforceUnmute(v);
+                                checkAndNotify(v);
                             });
                         });
+                        v.addEventListener('volumechange', function() {
+                            enforceUnmute(v);
+                        });
                     }
+                }
+
+                // Handle watch_video_click
+                if (hasClick && !window.__mytv_click_started) {
+                    window.__mytv_click_started = true;
+
+                    function processClicks(encoded, onComplete) {
+                        if (!encoded) { if (onComplete) onComplete(); return; }
+                        try {
+                            var decoded = atob(decodeURIComponent(encoded));
+                            var list = JSON.parse(decoded);
+                            if (!list || !list.length) { if (onComplete) onComplete(); return; }
+                            var idx = 0;
+                            function nextItem() {
+                                if (idx >= list.length) {
+                                    if (onComplete) onComplete();
+                                    return;
+                                }
+                                var item = list[idx++];
+                                var sel = item.selector;
+                                var delay = item.delay || 300;
+                                var tries = 0;
+                                var timer = setInterval(function() {
+                                    tries++;
+                                    var el = document.querySelector(sel);
+                                    if (el) {
+                                        clearInterval(timer);
+                                        setTimeout(function() {
+                                            try {
+                                                el.scrollIntoView({ behavior: 'instant', block: 'center' });
+                                                el.click();
+                                                el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+                                                el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+                                                el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                                                console.log('[mytv] auto-clicked target: ' + sel);
+                                            } catch(e) {}
+                                            nextItem();
+                                        }, delay);
+                                    } else if (tries > 60) {
+                                        clearInterval(timer);
+                                        nextItem();
+                                    }
+                                }, 250);
+                            }
+                            nextItem();
+                        } catch(e) {
+                            if (onComplete) onComplete();
+                        }
+                    }
+
+                    function onTargetChannelClicked() {
+                        var waitPoll = setInterval(function() {
+                            var v = document.querySelector('video');
+                            if (v) {
+                                setupVideo(v);
+                                if (!v.paused && v.currentTime > 0.2) {
+                                    clearInterval(waitPoll);
+                                    window.__mytv_click_done = true;
+                                    notifyReady();
+                                }
+                            }
+                        }, 200);
+                        setTimeout(function() {
+                            clearInterval(waitPoll);
+                            window.__mytv_click_done = true;
+                            notifyReady();
+                        }, 6000);
+                    }
+
+                    processClicks(c1, function() {
+                        if (c2) {
+                            processClicks(c2, function() { onTargetChannelClicked(); });
+                        } else {
+                            onTargetChannelClicked();
+                        }
+                    });
                 }
 
                 var cnt = 0;
@@ -275,11 +426,11 @@ class PlayerFragment : Fragment() {
                     var v = document.querySelector('video');
                     if (v) {
                         setupVideo(v);
-                        if (v.currentTime > 0.5) {
-                            clearInterval(poll);
-                        }
                     }
-                    if (cnt > 40) {
+                    if (cnt > 30 && isReadyNotified) {
+                        clearInterval(poll);
+                    }
+                    if (cnt > 60) {
                         clearInterval(poll);
                     }
                 }, 250);
@@ -331,6 +482,23 @@ class PlayerFragment : Fragment() {
                     layoutParams?.width =
                         (playerView.measuredHeight.times(aspectRatio)).toInt()
                     playerView.layoutParams = layoutParams
+                }
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+                if (playbackState == Player.STATE_ENDED) {
+                    val model = tvModel
+                    if (model != null && model.isLocalVideo()) {
+                        val currentEp = model.videoIndexValue
+                        val nextEp = (currentEp + 1) % model.tv.uris.size
+                        Log.i(TAG, "Local video ended, advancing from $currentEp to $nextEp")
+                        model.setVideoIndex(nextEp)
+                        val key = model.getLocalProgressKey()
+                        SP.setLocalEpisode(key, nextEp)
+                        SP.setLocalPosition(key, 0L)
+                        play(model)
+                    }
                 }
             }
 
@@ -406,9 +574,33 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    fun saveCurrentLocalProgress() {
+        val model = tvModel ?: return
+        if (model.isLocalVideo()) {
+            val pos = player?.currentPosition ?: 0L
+            val ep = model.videoIndexValue
+            val key = model.getLocalProgressKey()
+            SP.setLocalEpisode(key, ep)
+            SP.setLocalPosition(key, pos)
+            Log.i(TAG, "Saved local progress for $key: ep=$ep, pos=$pos ms")
+        }
+    }
+
     @OptIn(UnstableApi::class)
     fun play(tvModel: TVModel) {
+        if (this.tvModel != tvModel) {
+            saveCurrentLocalProgress()
+        }
         this.tvModel = tvModel
+
+        if (tvModel.isLocalVideo()) {
+            val key = tvModel.getLocalProgressKey()
+            val savedEp = SP.getLocalEpisode(key)
+            if (savedEp in 0 until tvModel.tv.uris.size && tvModel.videoIndexValue != savedEp) {
+                tvModel.setVideoIndex(savedEp)
+            }
+        }
+
         val url = tvModel.getVideoUrl() ?: return
         Log.i(TAG, "play url: $url")
 
@@ -423,6 +615,7 @@ class PlayerFragment : Fragment() {
             binding.webView.visibility = View.VISIBLE
             binding.webView.alpha = 0f
             cancelVideoWatchdog()
+            binding.webView.onResume()
             binding.webView.stopLoading()
             binding.webView.evaluateJavascript(
                 "try { document.querySelectorAll('video').forEach(function(v){ v.pause(); v.src = ''; }); } catch(e){}",
@@ -436,11 +629,13 @@ class PlayerFragment : Fragment() {
         // Direct stream -> ExoPlayer
         isUsingWebView = false
         cancelVideoWatchdog()
-        binding.webView.stopLoading()
         binding.webView.evaluateJavascript(
-            "try { document.querySelectorAll('video').forEach(function(v){ v.pause(); v.src = ''; }); } catch(e){}",
+            "try { document.querySelectorAll('video, audio').forEach(function(v){ v.pause(); v.muted = true; v.volume = 0; v.removeAttribute('src'); v.load(); }); } catch(e){}",
             null
         )
+        binding.webView.stopLoading()
+        binding.webView.loadUrl("about:blank")
+        binding.webView.onPause()
         binding.webView.visibility = View.GONE
         binding.playerView.visibility = View.VISIBLE
 
@@ -461,6 +656,17 @@ class PlayerFragment : Fragment() {
                     setMediaSource(mediaSource)
                 } else {
                     setMediaItem(mediaItem)
+                }
+                if (tvModel.isLocalVideo()) {
+                    repeatMode = Player.REPEAT_MODE_OFF
+                    val key = tvModel.getLocalProgressKey()
+                    val savedPos = SP.getLocalPosition(key)
+                    if (savedPos > 0) {
+                        seekTo(savedPos)
+                        Log.i(TAG, "Restored local video $key to pos $savedPos ms")
+                    }
+                } else {
+                    repeatMode = REPEAT_MODE_ALL
                 }
                 prepare()
                 break
@@ -545,6 +751,7 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        saveCurrentLocalProgress()
         if (isUsingWebView) {
             binding.webView.onPause()
         } else if (player?.isPlaying == true) {
@@ -554,6 +761,7 @@ class PlayerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        saveCurrentLocalProgress()
         cancelVideoWatchdog()
         player?.release()
         try {

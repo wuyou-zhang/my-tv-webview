@@ -216,4 +216,20 @@ object SP {
     var sources: String?
         get() = sp.getString(KEY_SOURCES, DEFAULT_SOURCES)
         set(value) = sp.edit().putString(KEY_SOURCES, value).apply()
+
+    fun getLocalEpisode(key: String): Int {
+        return sp.getInt("local_ep_$key", 0)
+    }
+
+    fun setLocalEpisode(key: String, episode: Int) {
+        sp.edit().putInt("local_ep_$key", episode).apply()
+    }
+
+    fun getLocalPosition(key: String): Long {
+        return sp.getLong("local_pos_$key", 0L)
+    }
+
+    fun setLocalPosition(key: String, position: Long) {
+        sp.edit().putLong("local_pos_$key", position).apply()
+    }
 }

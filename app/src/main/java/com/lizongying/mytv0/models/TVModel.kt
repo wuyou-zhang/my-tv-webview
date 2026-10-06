@@ -93,8 +93,8 @@ class TVModel(var tv: TV) : ViewModel() {
         get() = _ready
 
     fun setReady(retry: Boolean = false) {
+        _errInfo.value = null
         if (!retry) {
-            setErrInfo("")
             retryTimes = 0
 
             _videoIndex.value = max(0, min(tv.uris.size - 1, tv.videoIndex))
@@ -129,7 +129,9 @@ class TVModel(var tv: TV) : ViewModel() {
 
             _httpDataSource = okHttpDataSource
 
-            sourceTypeList = if (path.lowercase().endsWith(".m3u8")) {
+            sourceTypeList = if (scheme.lowercase() == "file") {
+                listOf(SourceType.PROGRESSIVE)
+            } else if (path.lowercase().endsWith(".m3u8")) {
                 listOf(SourceType.HLS)
             } else if (path.lowercase().endsWith(".mpd")) {
                 listOf(SourceType.DASH)
@@ -146,6 +148,21 @@ class TVModel(var tv: TV) : ViewModel() {
             MediaItem.fromUri(it)
         }
         return _mediaItem
+    }
+
+    fun setVideoIndex(index: Int) {
+        if (index in 0 until tv.uris.size) {
+            _videoIndex.value = index
+        }
+    }
+
+    fun isLocalVideo(): Boolean {
+        val url = getVideoUrl() ?: return false
+        return url.startsWith("file://")
+    }
+
+    fun getLocalProgressKey(): String {
+        return "${tv.group}_${tv.title}"
     }
 
     fun getSourceTypeDefault(): SourceType {
@@ -174,7 +191,7 @@ class TVModel(var tv: TV) : ViewModel() {
 
     @OptIn(UnstableApi::class)
     fun getMediaSource(): MediaSource? {
-        if (sourceTypeList.isEmpty()) {
+        if (sourceTypeList.isEmpty() || isLocalVideo()) {
             return null
         }
 

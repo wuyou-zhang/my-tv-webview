@@ -2,13 +2,18 @@ package com.lizongying.mytv0
 
 import MainViewModel
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Gravity
@@ -107,6 +112,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         isSafeToPerformFragmentTransactions = true
 
+        checkStoragePermission()
+
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.init(this)
 
@@ -125,6 +132,27 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         isSafeToPerformFragmentTransactions = true
+    }
+
+    private fun checkStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivity(intent)
+                } catch (_: Exception) {
+                    try {
+                        val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                        startActivity(intent)
+                    } catch (_: Exception) {}
+                }
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 101)
+            }
+        }
     }
 
     fun updateMenuSize() {
@@ -391,6 +419,10 @@ class MainActivity : AppCompatActivity() {
             distanceX: Float,
             distanceY: Float
         ): Boolean {
+            if ((menuFragment.isAdded && !menuFragment.isHidden) || (settingFragment.isAdded && !settingFragment.isHidden)) {
+                return false
+            }
+
             val oldX = e1?.rawX ?: 0f
             val oldY = e1?.rawY ?: 0f
             val newX = e2.rawX
@@ -899,6 +931,11 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         isSafeToPerformFragmentTransactions = true
+
+        val hasStoragePermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()
+        if (hasStoragePermission && this::viewModel.isInitialized && viewModel.listModel.none { it.isLocalVideo() }) {
+            viewModel.reloadChannels(force = true)
+        }
 
         showTimeFragment()
     }
