@@ -46,7 +46,7 @@ class GroupAdapter(
         binding.title.textSize = application.px2PxFont(binding.title.textSize)
 
         binding.root.isFocusable = true
-        binding.root.isFocusableInTouchMode = true
+        binding.root.isFocusableInTouchMode = false
         return ViewHolder(context, binding)
     }
 

@@ -83,7 +83,7 @@ class ListAdapter(
             val view = viewHolder.itemView
 
             view.isFocusable = true
-            view.isFocusableInTouchMode = true
+            view.isFocusableInTouchMode = false
 
             viewHolder.like(tvModel.like.value as Boolean)
 

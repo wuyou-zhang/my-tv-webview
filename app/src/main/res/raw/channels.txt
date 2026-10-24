@@ -424,6 +424,24 @@
   },
   {
     "id": 45,
+    "name": "新疆卫视",
+    "title": "新疆卫视",
+    "group": "各大卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600152138"
+    ]
+  },
+  {
+    "id": 46,
+    "name": "西藏卫视",
+    "title": "西藏卫视",
+    "group": "各大卫视",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190403"
+    ]
+  },
+  {
+    "id": 45,
     "name": "CCTV-14",
     "title": "CCTV-14 少儿",
     "group": "少儿卡通",
@@ -1006,6 +1024,24 @@
     "group": "北京",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600002309"
+    ]
+  },
+  {
+    "id": 110,
+    "name": "新疆卫视",
+    "title": "新疆卫视",
+    "group": "新疆",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600152138"
+    ]
+  },
+  {
+    "id": 111,
+    "name": "西藏卫视",
+    "title": "西藏卫视",
+    "group": "西藏",
+    "uris": [
+      "https://www.yangshipin.cn/tv/home?pid=600190403"
     ]
   }
 ]
