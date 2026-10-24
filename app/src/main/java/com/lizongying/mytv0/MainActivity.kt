@@ -604,26 +604,45 @@ class MainActivity : AppCompatActivity() {
         if (!fragment.isAdded) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.main_browse_fragment, fragment)
-                .commitAllowingStateLoss()
+                .commitNowAllowingStateLoss()
+            if (fragment != playerFragment) {
+                fragment.view?.bringToFront()
+            }
             return
         }
 
         if (!fragment.isHidden) {
-            fragment.view?.bringToFront()
+            if (fragment != playerFragment) {
+                fragment.view?.bringToFront()
+            }
             if (fragment == loadingFragment) {
                 infoFragment.view?.bringToFront()
                 channelFragment.view?.bringToFront()
+            }
+            if (menuFragment.isAdded && !menuFragment.isHidden) {
+                menuFragment.view?.bringToFront()
+            }
+            if (settingFragment.isAdded && !settingFragment.isHidden) {
+                settingFragment.view?.bringToFront()
             }
             return
         }
 
         supportFragmentManager.beginTransaction()
             .show(fragment)
-            .commitAllowingStateLoss()
-        fragment.view?.bringToFront()
+            .commitNowAllowingStateLoss()
+        if (fragment != playerFragment) {
+            fragment.view?.bringToFront()
+        }
         if (fragment == loadingFragment) {
             infoFragment.view?.bringToFront()
             channelFragment.view?.bringToFront()
+        }
+        if (menuFragment.isAdded && !menuFragment.isHidden && fragment != settingFragment) {
+            menuFragment.view?.bringToFront()
+        }
+        if (settingFragment.isAdded && !settingFragment.isHidden && fragment != menuFragment) {
+            settingFragment.view?.bringToFront()
         }
     }
 
@@ -838,6 +857,27 @@ class MainActivity : AppCompatActivity() {
 
     fun onKey(keyCode: Int): Boolean {
         Log.d(TAG, "keyCode $keyCode")
+        if (settingFragment.isAdded && !settingFragment.isHidden) {
+            settingActive()
+            if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_MENU) {
+                back()
+                return true
+            }
+            return false
+        }
+        if (menuFragment.isAdded && !menuFragment.isHidden) {
+            menuActive()
+            if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE) {
+                back()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
+                hideMenuFragment()
+                showSetting()
+                return true
+            }
+            return false
+        }
         when (keyCode) {
             KeyEvent.KEYCODE_0,
             KeyEvent.KEYCODE_1,

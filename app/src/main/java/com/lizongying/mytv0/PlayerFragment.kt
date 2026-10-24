@@ -84,16 +84,12 @@ class PlayerFragment : Fragment() {
         cancelVideoWatchdog()
         watchdogRunnable = Runnable {
             if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
-                Log.w(TAG, "Watchdog timeout: video did not report ready within 12s")
+                Log.w(TAG, "Watchdog timeout: forcing video play and making WebView visible")
                 binding.webView.evaluateJavascript(
-                    "try { var v = document.querySelector('video'); if (v) { v.muted=true; v.play(); } } catch(e){}",
+                    "try { var v = document.querySelector('video'); if (v) { v.muted=false; v.volume=1; v.play(); } } catch(e){}",
                     null
                 )
-                handler.postDelayed({
-                    if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
-                        tvModel?.setErrInfo(R.string.play_error.getString())
-                    }
-                }, 3000)
+                onVideoPlaying()
             }
         }
         handler.postDelayed(watchdogRunnable!!, 5000)
@@ -134,8 +130,8 @@ class PlayerFragment : Fragment() {
         settings.domStorageEnabled = true
         settings.databaseEnabled = true
         settings.mediaPlaybackRequiresUserGesture = false
-        settings.loadsImagesAutomatically = false
-        settings.blockNetworkImage = true
+        settings.loadsImagesAutomatically = true
+        settings.blockNetworkImage = false
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
         settings.allowFileAccess = true
@@ -188,14 +184,12 @@ class PlayerFragment : Fragment() {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                 ))
                 binding.fullscreenContainer.visibility = View.VISIBLE
-                binding.webView.visibility = View.INVISIBLE
             }
 
             override fun onHideCustomView() {
                 if (customView == null) return
                 binding.fullscreenContainer.removeView(customView)
                 binding.fullscreenContainer.visibility = View.GONE
-                binding.webView.visibility = View.VISIBLE
                 customViewCallback?.onCustomViewHidden()
                 customView = null
                 customViewCallback = null
@@ -229,44 +223,16 @@ class PlayerFragment : Fragment() {
             video::-webkit-media-controls-time-remaining-display,
             video::-webkit-media-controls-mute-button,
             video::-webkit-media-controls-volume-slider,
-            video::-webkit-media-controls-fullscreen-button {
-                display: none !important;
-            }
-            header, .header, nav, .nav, footer, .footer, .recommend, .comment,
-            aside, .aside, .sidebar, .user-info, .head, .bottom, .guide, .download-bar,
-            .share-box, .banner, .video-info, .player-control-top, .app-guide,
-            #header, #footer, .top-nav, .nav-wrap, .login-btn, .logo, .poster-box,
+            video::-webkit-media-controls-fullscreen-button,
             .txp_none, .txp_shadow, .txp_layer_title, .txp_layer_controls,
             .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side,
             .txp_overlay_play, .txp_center_play, .txp_big_play, .player_icon_play,
-            .txp_pop, .txp_toast, .txp_watermark,
-            .home-side-bar, .channel-side-bar, .live-channel-list, .side-bar-wrap,
-            
-            /* GDTV & MGTV & CCTV clean up */
-            .header_nav, .header_nav_vspace, .tvCCTV_nav, .newtopbz, [class*="nav_wrapper"],
-            .bg_top_h_tile, .bg_top_owner, .floatNav, .nav_gg, .backTop, [class*="bg_top"], [class*="top_nav"],
-            .channel-detail-right, [class*="channel-detail-right"], [class*="epg"], [class*="schedule"], [class*="search"] {
+            .txp_pop, .txp_toast, .txp_watermark {
                 display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
             }
-            .channel-detail-left, [class*="channel-detail-left"], .video-wrap, .video-player, .artplayer-app {
-                width: 100vw !important;
-                height: 100vh !important;
-                max-width: 100vw !important;
-                flex: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                z-index: 100000 !important;
-            }
-            [class*="video-card"], [class*="recommend-card"], [class*="channel-card"], [class*="app-download"], [class*="qrcode"], [class*="layer-item"], [class*="tip-layer"], [class*="live-card"], [class*="mg-layer"], .mod-live-sidebar, .live-channel-list {
-                display: none !important;
-            }
-            .ysp-home-sidebar, .sidebar-content, .cctv-side-bar, [class*="sidebar"], [class*="SideBar"] {
-                display: none !important;
-            }
-            html, body, #app, #root, .app, .main-wrap, .page-wrap {
+            html, body {
                 background: #000 !important;
                 background-color: #000 !important;
                 margin: 0 !important;
@@ -275,15 +241,6 @@ class PlayerFragment : Fragment() {
                 width: 100vw !important;
                 height: 100vh !important;
             }
-            #player, .player, .player-container, .mod_player, .txp_player {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                z-index: 100000 !important;
-                background: #000 !important;
-            }
             video {
                 display: block !important;
                 visibility: visible !important;
@@ -291,10 +248,16 @@ class PlayerFragment : Fragment() {
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
                 max-width: 100vw !important;
                 max-height: 100vh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                outline: none !important;
                 z-index: 2147483647 !important;
                 object-fit: contain !important;
                 background: #000 !important;
@@ -335,6 +298,77 @@ class PlayerFragment : Fragment() {
                     window.__mytv_click_done = !hasClick;
                 }
 
+                function findBestVideo() {
+                    var videos = document.querySelectorAll('video');
+                    if (!videos || !videos.length) return null;
+                    if (videos.length === 1) return videos[0];
+                    for (var i = 0; i < videos.length; i++) {
+                        if (!videos[i].paused && videos[i].videoWidth > 0) return videos[i];
+                    }
+                    for (var j = 0; j < videos.length; j++) {
+                        if (videos[j].readyState >= 2 || videos[j].src || videos[j].currentSrc) return videos[j];
+                    }
+                    return videos[0];
+                }
+
+                function makeVideoFullscreen(v) {
+                    if (!v) return;
+                    try {
+                        v.style.setProperty('display', 'block', 'important');
+                        v.style.setProperty('visibility', 'visible', 'important');
+                        v.style.setProperty('opacity', '1', 'important');
+                        v.style.setProperty('position', 'fixed', 'important');
+                        v.style.setProperty('top', '0', 'important');
+                        v.style.setProperty('left', '0', 'important');
+                        v.style.setProperty('right', '0', 'important');
+                        v.style.setProperty('bottom', '0', 'important');
+                        v.style.setProperty('width', '100vw', 'important');
+                        v.style.setProperty('height', '100vh', 'important');
+                        v.style.setProperty('max-width', '100vw', 'important');
+                        v.style.setProperty('max-height', '100vh', 'important');
+                        v.style.setProperty('margin', '0', 'important');
+                        v.style.setProperty('padding', '0', 'important');
+                        v.style.setProperty('border', 'none', 'important');
+                        v.style.setProperty('outline', 'none', 'important');
+                        v.style.setProperty('z-index', '2147483647', 'important');
+                        v.style.setProperty('object-fit', 'contain', 'important');
+                        v.style.setProperty('background', '#000', 'important');
+                        v.style.setProperty('background-color', '#000', 'important');
+
+                        var curr = v;
+                        var p = v.parentElement;
+                        var canHideSiblings = !!(window.__mytv_click_done && (!v.paused || v.readyState >= 2));
+                        while (p && p !== document.documentElement) {
+                            p.style.setProperty('visibility', 'visible', 'important');
+                            p.style.setProperty('opacity', '1', 'important');
+                            p.style.setProperty('transform', 'none', 'important');
+                            p.style.setProperty('-webkit-transform', 'none', 'important');
+                            p.style.setProperty('filter', 'none', 'important');
+                            p.style.setProperty('perspective', 'none', 'important');
+                            p.style.setProperty('contain', 'none', 'important');
+                            p.style.setProperty('clip-path', 'none', 'important');
+                            p.style.setProperty('overflow', 'visible', 'important');
+                            p.style.setProperty('z-index', '2147483647', 'important');
+                            p.style.setProperty('border', 'none', 'important');
+                            p.style.setProperty('outline', 'none', 'important');
+
+                            if (canHideSiblings) {
+                                var children = p.children;
+                                for (var i = 0; i < children.length; i++) {
+                                    var sib = children[i];
+                                    if (sib !== curr && !sib.contains(v) && sib.tagName !== 'STYLE' && sib.tagName !== 'SCRIPT') {
+                                        sib.style.setProperty('opacity', '0', 'important');
+                                        sib.style.setProperty('visibility', 'hidden', 'important');
+                                        sib.style.setProperty('pointer-events', 'none', 'important');
+                                    }
+                                }
+                            }
+                            curr = p;
+                            p = p.parentElement;
+                        }
+                    } catch(e) {}
+                }
+
                 function enforceUnmute(v) {
                     if (!v) return;
                     try {
@@ -362,7 +396,8 @@ class PlayerFragment : Fragment() {
                 function checkAndNotify(v) {
                     if (!v) return;
                     if (!window.__mytv_click_done) return;
-                    if (!v.paused && v.currentTime > 0.1) {
+                    if (!v.paused && (v.currentTime > 0.05 || v.readyState >= 2 || v.videoWidth > 0)) {
+                        makeVideoFullscreen(v);
                         notifyReady();
                     }
                 }
@@ -376,6 +411,7 @@ class PlayerFragment : Fragment() {
                         v.poster = '';
                     } catch(e) {}
 
+                    makeVideoFullscreen(v);
                     enforceUnmute(v);
 
                     if (v.paused) {
@@ -394,8 +430,9 @@ class PlayerFragment : Fragment() {
 
                     if (!v.__mytv_bound) {
                         v.__mytv_bound = true;
-                        ['timeupdate', 'playing', 'canplay', 'loadeddata'].forEach(function(ev) {
+                        ['timeupdate', 'playing', 'canplay', 'loadeddata', 'loadedmetadata'].forEach(function(ev) {
                             v.addEventListener(ev, function() {
+                                makeVideoFullscreen(v);
                                 enforceUnmute(v);
                                 checkAndNotify(v);
                             });
@@ -455,22 +492,21 @@ class PlayerFragment : Fragment() {
                     }
 
                     function onTargetChannelClicked() {
+                        window.__mytv_click_done = true;
                         var waitPoll = setInterval(function() {
-                            var v = document.querySelector('video');
+                            var v = findBestVideo();
                             if (v) {
                                 setupVideo(v);
-                                if (!v.paused && v.currentTime > 0.2) {
+                                if (!v.paused && (v.currentTime > 0.1 || v.readyState >= 2)) {
                                     clearInterval(waitPoll);
-                                    window.__mytv_click_done = true;
                                     notifyReady();
                                 }
                             }
                         }, 200);
                         setTimeout(function() {
                             clearInterval(waitPoll);
-                            window.__mytv_click_done = true;
                             notifyReady();
-                        }, 6000);
+                        }, 5000);
                     }
 
                     processClicks(c1, function() {
@@ -485,14 +521,14 @@ class PlayerFragment : Fragment() {
                 var cnt = 0;
                 var poll = setInterval(function() {
                     cnt++;
-                    var v = document.querySelector('video');
+                    var v = findBestVideo();
                     if (v) {
                         setupVideo(v);
                     }
-                    if (cnt > 30 && isReadyNotified) {
+                    if (cnt > 40 && isReadyNotified) {
                         clearInterval(poll);
                     }
-                    if (cnt > 60) {
+                    if (cnt > 80) {
                         clearInterval(poll);
                     }
                 }, 250);
@@ -687,6 +723,8 @@ class PlayerFragment : Fragment() {
         if (isWebUrl) {
             isUsingWebView = true
             player?.stop()
+            binding.fullscreenContainer.removeAllViews()
+            binding.fullscreenContainer.visibility = View.GONE
             binding.playerView.visibility = View.GONE
             binding.webView.visibility = View.VISIBLE
             binding.webView.alpha = 0f
