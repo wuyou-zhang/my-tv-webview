@@ -53,6 +53,12 @@ class SettingFragment : Fragment() {
         binding.setting.setOnClickListener {
             mainActivity.hideFragment(this)
         }
+        binding.container.setOnClickListener {
+            mainActivity.settingActive()
+        }
+        binding.content.setOnClickListener {
+            mainActivity.settingActive()
+        }
 
         return binding.root
     }
@@ -92,7 +98,7 @@ class SettingFragment : Fragment() {
                 gravity = Gravity.CENTER_VERTICAL
                 isFocusable = true
                 isClickable = true
-                isFocusableInTouchMode = true
+                isFocusableInTouchMode = false
 
                 val dp8 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics).toInt()
                 val dp12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12f, resources.displayMetrics).toInt()
@@ -160,6 +166,8 @@ class SettingFragment : Fragment() {
                 text = if (isCurrent) "✓ $titleText" else "   $titleText"
                 textSize = 14f
                 setTextColor(if (isCurrent) Color.parseColor("#00E5FF") else Color.parseColor("#E0E0E0"))
+                isClickable = false
+                isFocusable = false
             }
             itemLayout.addView(textView)
 

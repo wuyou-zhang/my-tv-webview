@@ -355,8 +355,18 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
+            val curScreenWidth = resources.displayMetrics.widthPixels
+
             if (settingFragment.isAdded && !settingFragment.isHidden) {
-                hideFragment(settingFragment)
+                val containerView = settingFragment.view?.findViewById<View>(R.id.container)
+                val density = resources.displayMetrics.density
+                val containerWidth = containerView?.width?.takeIf { it > 0 } ?: (340 * density).toInt()
+                val leftThreshold = curScreenWidth - containerWidth
+                if (e.x < leftThreshold) {
+                    hideFragment(settingFragment)
+                } else {
+                    settingActive()
+                }
                 return true
             }
 
@@ -368,10 +378,17 @@ class MainActivity : AppCompatActivity() {
                 val threshold = if (contentWidth > 0) contentWidth.toFloat() else ((220 + 360) * density)
                 if (e.x > threshold) {
                     hideMenuFragment()
+                    if (e.x > curScreenWidth * 0.7f) {
+                        showSetting()
+                    }
                 }
             } else {
-                showFragment(menuFragment)
-                menuActive()
+                if (e.x > curScreenWidth * 0.7f) {
+                    showSetting()
+                } else {
+                    showFragment(menuFragment)
+                    menuActive()
+                }
             }
             return true
         }
@@ -382,7 +399,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onLongPress(e: MotionEvent) {
-            showProgram()
+            if (menuFragment.isAdded && !menuFragment.isHidden) {
+                hideMenuFragment()
+            }
+            showSetting()
         }
 
         override fun onFling(
@@ -395,7 +415,12 @@ class MainActivity : AppCompatActivity() {
             val oldY = e1?.rawY ?: 0f
             val newX = e2.rawX
             val newY = e2.rawY
-            if (oldX > screenWidth / 3 && oldX < screenWidth * 2 / 3 && abs(newX - oldX) < abs(newY - oldY)) {
+            val dx = newX - oldX
+            val dy = newY - oldY
+            val curScreenWidth = resources.displayMetrics.widthPixels
+
+            // Vertical fling: switch channel
+            if (abs(dy) > abs(dx) && oldX > curScreenWidth / 4 && oldX < curScreenWidth * 3 / 4) {
                 if (velocityY > 0) {
                     if ((!menuFragment.isAdded || menuFragment.isHidden) && (!settingFragment.isAdded || settingFragment.isHidden)) {
                         prev()
@@ -404,6 +429,32 @@ class MainActivity : AppCompatActivity() {
                 if (velocityY < 0) {
                     if ((!menuFragment.isAdded || menuFragment.isHidden) && (!settingFragment.isAdded || settingFragment.isHidden)) {
                         next()
+                    }
+                }
+                return true
+            }
+
+            // Horizontal fling
+            if (abs(dx) > abs(dy)) {
+                // Swipe left from right side -> showSetting
+                if (dx < -100 && oldX > curScreenWidth * 0.5f) {
+                    if (!settingFragment.isAdded || settingFragment.isHidden) {
+                        if (menuFragment.isAdded && !menuFragment.isHidden) {
+                            hideMenuFragment()
+                        }
+                        showSetting()
+                        return true
+                    }
+                }
+                // Swipe right from left side -> showMenu
+                if (dx > 100 && oldX < curScreenWidth * 0.5f) {
+                    if (!menuFragment.isAdded || menuFragment.isHidden) {
+                        if (settingFragment.isAdded && !settingFragment.isHidden) {
+                            hideFragment(settingFragment)
+                        }
+                        showFragment(menuFragment)
+                        menuActive()
+                        return true
                     }
                 }
             }
@@ -861,6 +912,10 @@ class MainActivity : AppCompatActivity() {
             settingActive()
             if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_MENU) {
                 back()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                currentFocus?.performClick()
                 return true
             }
             return false
