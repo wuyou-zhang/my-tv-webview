@@ -667,7 +667,7 @@ class MainActivity : AppCompatActivity() {
 
     private val hideMenu = Runnable {
         if (!isFinishing && !supportFragmentManager.isStateSaved) {
-            if (!menuFragment.isHidden) {
+            if (menuFragment.isAdded && !menuFragment.isHidden) {
                 supportFragmentManager.beginTransaction()
                     .hide(menuFragment)
                     .commitAllowingStateLoss()
@@ -702,7 +702,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showChannel(channel: Int) {
-        if (!menuFragment.isHidden) {
+        if (menuFragment.isAdded && !menuFragment.isHidden) {
             return
         }
 

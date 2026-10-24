@@ -110,6 +110,7 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (binding.root as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         setupWebView()
         updatePlayer()
         (activity as MainActivity).ready(TAG)
@@ -227,7 +228,9 @@ class PlayerFragment : Fragment() {
             .txp_none, .txp_shadow, .txp_layer_title, .txp_layer_controls,
             .txp_bottom_shadow, .txp_top_shadow, .mod_player_head, .mod_player_side,
             .txp_overlay_play, .txp_center_play, .txp_big_play, .player_icon_play,
-            .txp_pop, .txp_toast, .txp_watermark {
+            .txp_pop, .txp_toast, .txp_watermark,
+            .vjs-control-bar, .vjs-big-play-button,
+            .channel-detail-right, [class*="channel-detail-right"], [class*="epg"], [class*="schedule"] {
                 display: none !important;
                 opacity: 0 !important;
                 visibility: hidden !important;
@@ -240,6 +243,18 @@ class PlayerFragment : Fragment() {
                 overflow: hidden !important;
                 width: 100vw !important;
                 height: 100vh !important;
+            }
+            .channel-detail-left, [class*="channel-detail-left"] {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: 100vw !important;
+                max-height: 100vh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                z-index: 100000 !important;
             }
             video {
                 display: block !important;
@@ -254,6 +269,8 @@ class PlayerFragment : Fragment() {
                 height: 100vh !important;
                 max-width: 100vw !important;
                 max-height: 100vh !important;
+                transform: none !important;
+                -webkit-transform: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 border: none !important;
@@ -330,6 +347,8 @@ class PlayerFragment : Fragment() {
                         v.style.setProperty('padding', '0', 'important');
                         v.style.setProperty('border', 'none', 'important');
                         v.style.setProperty('outline', 'none', 'important');
+                        v.style.setProperty('transform', 'none', 'important');
+                        v.style.setProperty('-webkit-transform', 'none', 'important');
                         v.style.setProperty('z-index', '2147483647', 'important');
                         v.style.setProperty('object-fit', 'contain', 'important');
                         v.style.setProperty('background', '#000', 'important');
@@ -371,6 +390,10 @@ class PlayerFragment : Fragment() {
 
                 function enforceUnmute(v) {
                     if (!v) return;
+                    if (!window.__mytv_click_done) {
+                        try { v.muted = true; } catch(e) {}
+                        return;
+                    }
                     try {
                         if (v.muted || v.defaultMuted || v.hasAttribute('muted')) {
                             v.muted = false;
@@ -398,6 +421,7 @@ class PlayerFragment : Fragment() {
                     if (!window.__mytv_click_done) return;
                     if (!v.paused && (v.currentTime > 0.05 || v.readyState >= 2 || v.videoWidth > 0)) {
                         makeVideoFullscreen(v);
+                        enforceUnmute(v);
                         notifyReady();
                     }
                 }
@@ -410,6 +434,11 @@ class PlayerFragment : Fragment() {
                         v.setAttribute('poster', '');
                         v.poster = '';
                     } catch(e) {}
+
+                    if (!window.__mytv_click_done) {
+                        enforceUnmute(v);
+                        return;
+                    }
 
                     makeVideoFullscreen(v);
                     enforceUnmute(v);
@@ -492,21 +521,28 @@ class PlayerFragment : Fragment() {
                     }
 
                     function onTargetChannelClicked() {
-                        window.__mytv_click_done = true;
-                        var waitPoll = setInterval(function() {
-                            var v = findBestVideo();
-                            if (v) {
-                                setupVideo(v);
-                                if (!v.paused && (v.currentTime > 0.1 || v.readyState >= 2)) {
-                                    clearInterval(waitPoll);
+                        setTimeout(function() {
+                            window.__mytv_click_done = true;
+                            document.documentElement.classList.add('__mytv_fullscreen_active');
+                            var waitPoll = setInterval(function() {
+                                var v = findBestVideo();
+                                if (v) {
+                                    setupVideo(v);
+                                    if (!v.paused && (v.currentTime > 0.1 || v.readyState >= 2 || v.videoWidth > 0)) {
+                                        clearInterval(waitPoll);
+                                        notifyReady();
+                                    }
+                                }
+                            }, 200);
+                            setTimeout(function() {
+                                clearInterval(waitPoll);
+                                var v = findBestVideo();
+                                if (v) {
+                                    setupVideo(v);
                                     notifyReady();
                                 }
-                            }
-                        }, 200);
-                        setTimeout(function() {
-                            clearInterval(waitPoll);
-                            notifyReady();
-                        }, 5000);
+                            }, 6000);
+                        }, 800);
                     }
 
                     processClicks(c1, function() {
@@ -525,13 +561,27 @@ class PlayerFragment : Fragment() {
                     if (v) {
                         setupVideo(v);
                     }
-                    if (cnt > 40 && isReadyNotified) {
+                    if (cnt > 60 && isReadyNotified) {
                         clearInterval(poll);
                     }
-                    if (cnt > 80) {
+                    if (cnt > 100) {
                         clearInterval(poll);
                     }
                 }, 250);
+
+                if (!window.__mytv_heartbeat) {
+                    window.__mytv_heartbeat = setInterval(function() {
+                        if (!window.__mytv_click_done) return;
+                        var v = findBestVideo();
+                        if (v) {
+                            enforceUnmute(v);
+                            makeVideoFullscreen(v);
+                            if (v.paused) {
+                                try { v.play().catch(function(){}); } catch(e) {}
+                            }
+                        }
+                    }, 800);
+                }
 
                 document.addEventListener('playing', function(e) {
                     if (e.target && e.target.tagName === 'VIDEO') {

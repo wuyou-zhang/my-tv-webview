@@ -443,15 +443,6 @@
   },
   {
     "id": 47,
-    "name": "卡酷少儿",
-    "title": "卡酷少儿",
-    "group": "少儿卡通",
-    "uris": [
-      "https://item.btime.com/live/2g8f7h9h8v38e4h22v2g2b6564e"
-    ]
-  },
-  {
-    "id": 48,
     "name": "江苏优漫卡通",
     "title": "优漫卡通",
     "group": "少儿卡通",
@@ -460,7 +451,7 @@
     ]
   },
   {
-    "id": 49,
+    "id": 48,
     "name": "嘉佳卡通",
     "title": "嘉佳卡通",
     "group": "少儿卡通",
@@ -469,7 +460,7 @@
     ]
   },
   {
-    "id": 50,
+    "id": 49,
     "name": "哈哈炫动",
     "title": "哈哈炫动",
     "group": "少儿卡通",
@@ -478,7 +469,7 @@
     ]
   },
   {
-    "id": 51,
+    "id": 50,
     "name": "广东少儿",
     "title": "广东少儿",
     "group": "少儿卡通",
@@ -487,16 +478,16 @@
     ]
   },
   {
-    "id": 52,
+    "id": 51,
     "name": "浙江少儿频道",
     "title": "浙江少儿",
     "group": "少儿卡通",
     "uris": [
-      "https://www.cztv.com/liveTV/107"
+      "https://www.cztv.com/liveTV/108"
     ]
   },
   {
-    "id": 53,
+    "id": 52,
     "name": "山东少儿频道",
     "title": "山东少儿",
     "group": "少儿卡通",
@@ -505,25 +496,25 @@
     ]
   },
   {
-    "id": 54,
+    "id": 53,
     "name": "福建少儿频道",
     "title": "福建少儿",
     "group": "少儿卡通",
     "uris": [
-      "https://live.fjtv.net/live/fjtv_se.html"
+      "https://live.fjtv.net/sepd/"
     ]
   },
   {
-    "id": 55,
+    "id": 54,
     "name": "河北少儿科教",
     "title": "河北少儿科教",
     "group": "少儿卡通",
     "uris": [
-      "https://www.hebtv.com/19/19js/live/index.shtml?index=5"
+      "https://www.hebtv.com/19/19js/st/xdszb/index.shtml?index=4"
     ]
   },
   {
-    "id": 56,
+    "id": 55,
     "name": "山东卫视",
     "title": "山东卫视",
     "group": "山东",
@@ -532,7 +523,7 @@
     ]
   },
   {
-    "id": 57,
+    "id": 56,
     "name": "齐鲁频道",
     "title": "齐鲁频道",
     "group": "山东",
@@ -541,7 +532,7 @@
     ]
   },
   {
-    "id": 58,
+    "id": 57,
     "name": "山东新闻频道",
     "title": "山东新闻频道",
     "group": "山东",
@@ -550,7 +541,7 @@
     ]
   },
   {
-    "id": 59,
+    "id": 58,
     "name": "山东农科频道",
     "title": "山东农科频道",
     "group": "山东",
@@ -559,7 +550,7 @@
     ]
   },
   {
-    "id": 60,
+    "id": 59,
     "name": "山东少儿频道",
     "title": "山东少儿频道",
     "group": "山东",
@@ -568,7 +559,7 @@
     ]
   },
   {
-    "id": 61,
+    "id": 60,
     "name": "山东体育频道",
     "title": "山东体育频道",
     "group": "山东",
@@ -577,7 +568,7 @@
     ]
   },
   {
-    "id": 62,
+    "id": 61,
     "name": "山东文旅频道",
     "title": "山东文旅频道",
     "group": "山东",
@@ -586,7 +577,7 @@
     ]
   },
   {
-    "id": 63,
+    "id": 62,
     "name": "山东生活频道",
     "title": "山东生活频道",
     "group": "山东",
@@ -595,7 +586,7 @@
     ]
   },
   {
-    "id": 64,
+    "id": 63,
     "name": "山东影视频道",
     "title": "山东影视频道",
     "group": "山东",
@@ -604,7 +595,7 @@
     ]
   },
   {
-    "id": 65,
+    "id": 64,
     "name": "济南新闻综合",
     "title": "济南新闻综合",
     "group": "山东",
@@ -613,7 +604,7 @@
     ]
   },
   {
-    "id": 66,
+    "id": 65,
     "name": "青岛新闻综合",
     "title": "青岛新闻综合",
     "group": "山东",
@@ -622,7 +613,7 @@
     ]
   },
   {
-    "id": 67,
+    "id": 66,
     "name": "湖南卫视",
     "title": "湖南卫视",
     "group": "湖南",
@@ -631,7 +622,7 @@
     ]
   },
   {
-    "id": 68,
+    "id": 67,
     "name": "金鹰卡通",
     "title": "金鹰卡通",
     "group": "湖南",
@@ -640,7 +631,7 @@
     ]
   },
   {
-    "id": 69,
+    "id": 68,
     "name": "湖南经视",
     "title": "湖南经视",
     "group": "湖南",
@@ -649,7 +640,7 @@
     ]
   },
   {
-    "id": 70,
+    "id": 69,
     "name": "湖南都市",
     "title": "湖南都市",
     "group": "湖南",
@@ -658,7 +649,7 @@
     ]
   },
   {
-    "id": 71,
+    "id": 70,
     "name": "湖南电影",
     "title": "湖南电影",
     "group": "湖南",
@@ -667,7 +658,7 @@
     ]
   },
   {
-    "id": 72,
+    "id": 71,
     "name": "湖南电视剧",
     "title": "湖南电视剧",
     "group": "湖南",
@@ -676,7 +667,7 @@
     ]
   },
   {
-    "id": 73,
+    "id": 72,
     "name": "金鹰纪实",
     "title": "金鹰纪实",
     "group": "湖南",
@@ -685,7 +676,7 @@
     ]
   },
   {
-    "id": 74,
+    "id": 73,
     "name": "湖南爱晚",
     "title": "湖南爱晚",
     "group": "湖南",
@@ -694,7 +685,7 @@
     ]
   },
   {
-    "id": 75,
+    "id": 74,
     "name": "长沙新闻综合",
     "title": "长沙新闻综合",
     "group": "湖南",
@@ -703,16 +694,16 @@
     ]
   },
   {
-    "id": 76,
+    "id": 75,
     "name": "长沙政法",
     "title": "长沙政法",
     "group": "湖南",
     "uris": [
-      "https://www.mgtv.com/live/?watch_video_click=W3sic2VsZWN0b3IiOiIudGFicyA%2BIGRpdjpudGgtY2hpbGQoNCkiLCJkZWxheSI6MzAwfV0%3D&watch_video_click2=W3sic2VsZWN0b3IiOiJbZGF0YS1jaGFubmVsLXNpZD1cIjI3MVwiXSIsImRlbGF5IjozMDB9XQ=="
+      "https://www.mgtv.com/live/?watch_video_click=W3sic2VsZWN0b3IiOiIudGFicyA%2BIGRpdjpudGgtY2hpbGQoNCkiLCJkZWxheSI6MzAwfV0%3D&watch_video_click2=W3sic2VsZWN0b3IiOiJbZGF0YS1jaGFubmVsLXNpZD1cIjI1NFwiXSIsImRlbGF5IjozMDB9XQ=="
     ]
   },
   {
-    "id": 77,
+    "id": 76,
     "name": "浙江卫视",
     "title": "浙江卫视",
     "group": "浙江",
@@ -721,7 +712,7 @@
     ]
   },
   {
-    "id": 78,
+    "id": 77,
     "name": "钱江都市",
     "title": "钱江都市",
     "group": "浙江",
@@ -730,7 +721,7 @@
     ]
   },
   {
-    "id": 79,
+    "id": 78,
     "name": "经济生活",
     "title": "经济生活",
     "group": "浙江",
@@ -739,7 +730,7 @@
     ]
   },
   {
-    "id": 80,
+    "id": 79,
     "name": "教科影视",
     "title": "教科影视",
     "group": "浙江",
@@ -748,7 +739,7 @@
     ]
   },
   {
-    "id": 81,
+    "id": 80,
     "name": "民生休闲",
     "title": "民生休闲",
     "group": "浙江",
@@ -757,7 +748,7 @@
     ]
   },
   {
-    "id": 82,
+    "id": 81,
     "name": "浙江新闻",
     "title": "浙江新闻",
     "group": "浙江",
@@ -766,16 +757,16 @@
     ]
   },
   {
-    "id": 83,
+    "id": 82,
     "name": "浙江少儿频道",
     "title": "浙江少儿",
     "group": "浙江",
     "uris": [
-      "https://www.cztv.com/liveTV/107"
+      "https://www.cztv.com/liveTV/108"
     ]
   },
   {
-    "id": 84,
+    "id": 83,
     "name": "江苏卫视",
     "title": "江苏卫视",
     "group": "江苏",
@@ -784,7 +775,7 @@
     ]
   },
   {
-    "id": 85,
+    "id": 84,
     "name": "江苏城市",
     "title": "江苏城市",
     "group": "江苏",
@@ -793,7 +784,7 @@
     ]
   },
   {
-    "id": 86,
+    "id": 85,
     "name": "江苏综艺",
     "title": "江苏综艺",
     "group": "江苏",
@@ -802,16 +793,16 @@
     ]
   },
   {
-    "id": 87,
+    "id": 86,
     "name": "江苏影视",
     "title": "江苏影视",
     "group": "江苏",
     "uris": [
-      "https://live.jstv.com/?watch_video_click=W3sic2VsZWN0b3IiOiIuc3dpcGVyLXdyYXBwZXIgPiBkaXY6bnRoLWNoaWxkKDUpIC5pbWdCb3giLCJkZWxheSI6MjAwMH1d"
+      "https://live.jstv.com/?watch_video_click=W3sic2VsZWN0b3IiOiIuc3dpcGVyLXdyYXBwZXIgPiBkaXY6bnRoLWNoaWxkKDgpIC5pbWdCb3giLCJkZWxheSI6MjAwMH1d"
     ]
   },
   {
-    "id": 88,
+    "id": 87,
     "name": "江苏优漫卡通",
     "title": "优漫卡通",
     "group": "江苏",
@@ -820,7 +811,7 @@
     ]
   },
   {
-    "id": 89,
+    "id": 88,
     "name": "广东卫视",
     "title": "广东卫视",
     "group": "广东",
@@ -829,7 +820,7 @@
     ]
   },
   {
-    "id": 90,
+    "id": 89,
     "name": "深圳卫视",
     "title": "深圳卫视",
     "group": "广东",
@@ -838,7 +829,7 @@
     ]
   },
   {
-    "id": 91,
+    "id": 90,
     "name": "大湾区卫视",
     "title": "大湾区卫视",
     "group": "广东",
@@ -847,7 +838,7 @@
     ]
   },
   {
-    "id": 92,
+    "id": 91,
     "name": "广东珠江",
     "title": "广东珠江",
     "group": "广东",
@@ -856,7 +847,7 @@
     ]
   },
   {
-    "id": 93,
+    "id": 92,
     "name": "广东新闻",
     "title": "广东新闻",
     "group": "广东",
@@ -865,7 +856,7 @@
     ]
   },
   {
-    "id": 94,
+    "id": 93,
     "name": "广东体育",
     "title": "广东体育",
     "group": "广东",
@@ -874,16 +865,16 @@
     ]
   },
   {
-    "id": 95,
+    "id": 94,
     "name": "广东影视",
     "title": "广东影视",
     "group": "广东",
     "uris": [
-      "https://www.gdtv.cn/tvChannelDetail/48"
+      "https://www.gdtv.cn/tvChannelDetail/53"
     ]
   },
   {
-    "id": 96,
+    "id": 95,
     "name": "广东少儿",
     "title": "广东少儿",
     "group": "广东",
@@ -892,7 +883,7 @@
     ]
   },
   {
-    "id": 97,
+    "id": 96,
     "name": "嘉佳卡通",
     "title": "嘉佳卡通",
     "group": "广东",
@@ -901,7 +892,7 @@
     ]
   },
   {
-    "id": 98,
+    "id": 97,
     "name": "东方卫视",
     "title": "东方卫视",
     "group": "上海",
@@ -910,7 +901,7 @@
     ]
   },
   {
-    "id": 99,
+    "id": 98,
     "name": "上海新闻综合",
     "title": "上海新闻综合",
     "group": "上海",
@@ -919,7 +910,7 @@
     ]
   },
   {
-    "id": 100,
+    "id": 99,
     "name": "第一财经",
     "title": "第一财经",
     "group": "上海",
@@ -928,25 +919,25 @@
     ]
   },
   {
-    "id": 101,
+    "id": 100,
     "name": "上海都市",
     "title": "上海都市",
     "group": "上海",
     "uris": [
-      "https://live.kankanews.com/huikan?id=7"
+      "https://live.kankanews.com/huikan?id=4"
     ]
   },
   {
-    "id": 102,
+    "id": 101,
     "name": "上海五星体育",
     "title": "上海五星体育",
     "group": "上海",
     "uris": [
-      "https://live.kankanews.com/huikan?id=1"
+      "https://live.kankanews.com/huikan?id=10"
     ]
   },
   {
-    "id": 103,
+    "id": 102,
     "name": "哈哈炫动",
     "title": "哈哈炫动",
     "group": "上海",
@@ -955,7 +946,7 @@
     ]
   },
   {
-    "id": 104,
+    "id": 103,
     "name": "四川卫视",
     "title": "四川卫视",
     "group": "四川",
@@ -964,16 +955,16 @@
     ]
   },
   {
-    "id": 105,
+    "id": 104,
     "name": "四川观察",
     "title": "四川观察",
     "group": "四川",
     "uris": [
-      "https://www.sctv.com/live/"
+      "https://www.sctv.com/live/list"
     ]
   },
   {
-    "id": 106,
+    "id": 105,
     "name": "四川新闻综合",
     "title": "四川新闻综合",
     "group": "四川",
@@ -982,7 +973,7 @@
     ]
   },
   {
-    "id": 107,
+    "id": 106,
     "name": "四川经济频道",
     "title": "四川经济频道",
     "group": "四川",
@@ -991,66 +982,30 @@
     ]
   },
   {
-    "id": 108,
+    "id": 107,
     "name": "四川生活频道",
     "title": "四川生活频道",
     "group": "四川",
     "uris": [
-      "https://www.cditv.cn/show/4845-564.html"
+      "https://www.cditv.cn/show/4845-561.html"
     ]
   },
   {
-    "id": 109,
+    "id": 108,
     "name": "四川影视文艺频道",
     "title": "四川影视文艺频道",
     "group": "四川",
     "uris": [
-      "https://www.cditv.cn/show/4845-565.html"
+      "https://www.cditv.cn/show/4845-560.html"
     ]
   },
   {
-    "id": 110,
+    "id": 109,
     "name": "北京卫视",
     "title": "北京卫视",
     "group": "北京",
     "uris": [
       "https://www.yangshipin.cn/tv/home?pid=600002309"
-    ]
-  },
-  {
-    "id": 111,
-    "name": "卡酷少儿",
-    "title": "卡酷少儿",
-    "group": "北京",
-    "uris": [
-      "https://item.btime.com/live/2g8f7h9h8v38e4h22v2g2b6564e"
-    ]
-  },
-  {
-    "id": 112,
-    "name": "北京影视",
-    "title": "北京影视",
-    "group": "北京",
-    "uris": [
-      "https://item.btime.com/live/54r61r41b9t9glh3mfrs6oef35v"
-    ]
-  },
-  {
-    "id": 113,
-    "name": "北京文艺",
-    "title": "北京文艺",
-    "group": "北京",
-    "uris": [
-      "https://item.btime.com/live/3673f8gqgfs8h4i7l148o1i7t8v"
-    ]
-  },
-  {
-    "id": 114,
-    "name": "北京新闻",
-    "title": "北京新闻",
-    "group": "北京",
-    "uris": [
-      "https://item.btime.com/live/13cst4f028v99vh729596hvhsc4"
     ]
   }
 ]
