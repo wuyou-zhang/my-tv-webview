@@ -232,4 +232,12 @@ object SP {
     fun setLocalPosition(key: String, position: Long) {
         sp.edit().putLong("local_pos_$key", position).apply()
     }
+
+    fun getChannelSourceIndex(channelId: Int): Int {
+        return sp.getInt("ch_source_" + channelId, 0)
+    }
+
+    fun setChannelSourceIndex(channelId: Int, index: Int) {
+        sp.edit().putInt("ch_source_" + channelId, index).apply()
+    }
 }

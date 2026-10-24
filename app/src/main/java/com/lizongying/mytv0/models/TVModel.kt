@@ -97,7 +97,14 @@ class TVModel(var tv: TV) : ViewModel() {
         if (!retry) {
             retryTimes = 0
 
-            _videoIndex.value = max(0, min(tv.uris.size - 1, tv.videoIndex))
+            val defaultIdx = if (isLocalVideo()) {
+                val savedEp = SP.getLocalEpisode(getLocalProgressKey())
+                max(0, min(tv.uris.size - 1, savedEp))
+            } else {
+                val savedSrc = SP.getChannelSourceIndex(tv.id)
+                max(0, min(tv.uris.size - 1, savedSrc))
+            }
+            _videoIndex.value = defaultIdx
             sourceTypeIndex =
                 max(0, min(sourceTypeList.size - 1, sourceTypeList.indexOf(tv.sourceType)))
         }
@@ -251,7 +258,14 @@ class TVModel(var tv: TV) : ViewModel() {
     }
 
     init {
-        _videoIndex.value = max(0, min(tv.uris.size - 1, tv.videoIndex))
+        val defaultIdx = if (isLocalVideo()) {
+            val savedEp = SP.getLocalEpisode(getLocalProgressKey())
+            max(0, min(tv.uris.size - 1, savedEp))
+        } else {
+            val savedSrc = SP.getChannelSourceIndex(tv.id)
+            max(0, min(tv.uris.size - 1, savedSrc))
+        }
+        _videoIndex.value = defaultIdx
         _like.value = SP.getLike(tv.id)
     }
 

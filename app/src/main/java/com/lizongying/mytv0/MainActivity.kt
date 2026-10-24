@@ -30,6 +30,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lizongying.mytv0.databinding.SettingsWebBinding
+import com.lizongying.mytv0.models.TVModel
 import java.util.Locale
 import kotlin.math.abs
 
@@ -504,6 +505,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    
+    fun playTvModel(tvModel: TVModel) {
+        hideFragment(errorFragment)
+        showFragment(loadingFragment)
+        playerFragment.play(tvModel)
+        infoFragment.show(tvModel)
+        channelFragment.show(tvModel)
+        infoFragment.view?.bringToFront()
+        loadingFragment.view?.bringToFront()
+    }
+
     fun play(position: Int): Boolean {
         return if (position > -1 && position < viewModel.groupModel.getAllList()!!.size()) {
             val prevGroup = viewModel.groupModel.positionValue
@@ -584,7 +596,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFragment(fragment: Fragment) {
+    fun showFragment(fragment: Fragment) {
         if (!isSafeToPerformFragmentTransactions) {
             return
         }
@@ -615,7 +627,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideFragment(fragment: Fragment) {
+    fun hideFragment(fragment: Fragment) {
         if (!isSafeToPerformFragmentTransactions) {
             return
         }
@@ -758,7 +770,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        val tvModel = viewModel.groupModel.getCurrent()
         showFragment(settingFragment)
+        settingFragment.updateCurrentChannel(tvModel)
+        settingFragment.view?.bringToFront()
 
         settingActive()
     }

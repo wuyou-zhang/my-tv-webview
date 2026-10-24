@@ -3,12 +3,15 @@ package com.lizongying.mytv0
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
+import android.content.Context
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -37,6 +40,15 @@ import com.lizongying.mytv0.models.TVModel
 
 
 class PlayerFragment : Fragment() {
+    private var audioManager: AudioManager? = null
+
+    private fun requestAudioFocus(): Boolean {
+        return true
+    }
+
+    private fun abandonAudioFocus() {
+    }
+
     private var _binding: PlayerBinding? = null
     private val binding get() = _binding!!
 
@@ -84,7 +96,7 @@ class PlayerFragment : Fragment() {
                 }, 3000)
             }
         }
-        handler.postDelayed(watchdogRunnable!!, 12000)
+        handler.postDelayed(watchdogRunnable!!, 5000)
     }
 
     private fun cancelVideoWatchdog() {
@@ -122,6 +134,8 @@ class PlayerFragment : Fragment() {
         settings.domStorageEnabled = true
         settings.databaseEnabled = true
         settings.mediaPlaybackRequiresUserGesture = false
+        settings.loadsImagesAutomatically = false
+        settings.blockNetworkImage = true
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
         settings.allowFileAccess = true
@@ -160,6 +174,32 @@ class PlayerFragment : Fragment() {
         }
 
         webView.webChromeClient = object : WebChromeClient() {
+            private var customView: View? = null
+            private var customViewCallback: CustomViewCallback? = null
+
+            override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                if (customView != null) {
+                    callback?.onCustomViewHidden()
+                    return
+                }
+                customView = view
+                customViewCallback = callback
+                binding.fullscreenContainer.addView(view, FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                ))
+                binding.fullscreenContainer.visibility = View.VISIBLE
+                binding.webView.visibility = View.INVISIBLE
+            }
+
+            override fun onHideCustomView() {
+                if (customView == null) return
+                binding.fullscreenContainer.removeView(customView)
+                binding.fullscreenContainer.visibility = View.GONE
+                binding.webView.visibility = View.VISIBLE
+                customViewCallback?.onCustomViewHidden()
+                customView = null
+                customViewCallback = null
+            }
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress > 25) {
@@ -201,6 +241,28 @@ class PlayerFragment : Fragment() {
             .txp_overlay_play, .txp_center_play, .txp_big_play, .player_icon_play,
             .txp_pop, .txp_toast, .txp_watermark,
             .home-side-bar, .channel-side-bar, .live-channel-list, .side-bar-wrap,
+            
+            /* GDTV & MGTV & CCTV clean up */
+            .header_nav, .header_nav_vspace, .tvCCTV_nav, .newtopbz, [class*="nav_wrapper"],
+            .bg_top_h_tile, .bg_top_owner, .floatNav, .nav_gg, .backTop, [class*="bg_top"], [class*="top_nav"],
+            .channel-detail-right, [class*="channel-detail-right"], [class*="epg"], [class*="schedule"], [class*="search"] {
+                display: none !important;
+            }
+            .channel-detail-left, [class*="channel-detail-left"], .video-wrap, .video-player, .artplayer-app {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: 100vw !important;
+                flex: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                z-index: 100000 !important;
+            }
+            [class*="video-card"], [class*="recommend-card"], [class*="channel-card"], [class*="app-download"], [class*="qrcode"], [class*="layer-item"], [class*="tip-layer"], [class*="live-card"], [class*="mg-layer"], .mod-live-sidebar, .live-channel-list {
+                display: none !important;
+            }
             .ysp-home-sidebar, .sidebar-content, .cctv-side-bar, [class*="sidebar"], [class*="SideBar"] {
                 display: none !important;
             }
@@ -465,8 +527,14 @@ class PlayerFragment : Fragment() {
 
         player?.release()
 
+        val audioAttributes = androidx.media3.common.AudioAttributes.Builder()
+            .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MOVIE)
+            .setUsage(androidx.media3.common.C.USAGE_MEDIA)
+            .build()
+
         player = ExoPlayer.Builder(ctx)
             .setRenderersFactory(renderersFactory)
+            .setAudioAttributes(audioAttributes, true)
             .build()
         player?.repeatMode = REPEAT_MODE_ALL
         player?.playWhenReady = true
@@ -593,13 +661,21 @@ class PlayerFragment : Fragment() {
         }
         this.tvModel = tvModel
 
+
         if (tvModel.isLocalVideo()) {
             val key = tvModel.getLocalProgressKey()
             val savedEp = SP.getLocalEpisode(key)
             if (savedEp in 0 until tvModel.tv.uris.size && tvModel.videoIndexValue != savedEp) {
                 tvModel.setVideoIndex(savedEp)
             }
+        } else {
+            val savedIndex = SP.getChannelSourceIndex(tvModel.tv.id)
+            if (savedIndex in 0 until tvModel.tv.uris.size && tvModel.videoIndexValue != savedIndex) {
+                tvModel.setVideoIndex(savedIndex)
+            }
         }
+        requestAudioFocus()
+
 
         val url = tvModel.getVideoUrl() ?: return
         Log.i(TAG, "play url: $url")
@@ -752,6 +828,7 @@ class PlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         saveCurrentLocalProgress()
+        abandonAudioFocus()
         if (isUsingWebView) {
             binding.webView.onPause()
         } else if (player?.isPlaying == true) {
@@ -763,8 +840,13 @@ class PlayerFragment : Fragment() {
         super.onDestroy()
         saveCurrentLocalProgress()
         cancelVideoWatchdog()
+        abandonAudioFocus()
         player?.release()
         try {
+            binding.webView.stopLoading()
+            binding.webView.loadUrl("about:blank")
+            binding.webView.clearHistory()
+            binding.webView.removeAllViews()
             binding.webView.destroy()
         } catch (_: Exception) {}
     }
