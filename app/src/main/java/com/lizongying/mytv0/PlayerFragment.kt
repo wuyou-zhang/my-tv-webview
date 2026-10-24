@@ -17,9 +17,11 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import java.io.ByteArrayInputStream
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -143,6 +145,93 @@ class PlayerFragment : Fragment() {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 
         webView.webViewClient = object : WebViewClient() {
+            private val EMPTY_BYTES = ByteArray(0)
+
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                if (request == null || request.url == null) {
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+                // 1. NEVER intercept main frame HTML navigation
+                if (request.isForMainFrame) {
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+                val urlStr = request.url.toString()
+                val lower = urlStr.lowercase()
+
+                // 2. WHITELIST: Essential media streaming protocols, chunks, keys, and player SDK core scripts
+                if (lower.contains(".m3u8") ||
+                    lower.contains(".ts") ||
+                    lower.contains(".m4s") ||
+                    lower.contains(".mpd") ||
+                    lower.contains(".mp4") ||
+                    lower.contains(".flv") ||
+                    lower.contains(".aac") ||
+                    lower.contains(".key") ||
+                    lower.contains("vdn.live.cntv.cn") ||
+                    lower.contains("vdn.apps.cntv.cn") ||
+                    lower.contains("bcache.yangshipin.cn") ||
+                    lower.contains("liveplayer.js") ||
+                    lower.contains("swfobject.js") ||
+                    lower.contains("txplayer") ||
+                    lower.contains("tcplayer") ||
+                    lower.contains("hls.js") ||
+                    lower.contains("flv.js") ||
+                    lower.contains("dash.js")
+                ) {
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+                // 3. BLACKLIST: Third-party analytics, trackers, ads, and telemetry report scripts
+                if (lower.contains("umeng") ||
+                    lower.contains("sensors") ||
+                    lower.contains("hm.baidu.com") ||
+                    lower.contains("tongji") ||
+                    lower.contains("google-analytics") ||
+                    lower.contains("googletagmanager") ||
+                    lower.contains("quicktracking") ||
+                    lower.contains("qt_web") ||
+                    lower.contains("aplus") ||
+                    lower.contains("cntv_advertise") ||
+                    lower.contains("data.cctv.com") ||
+                    lower.contains("p.data.cctv.com") ||
+                    lower.contains("mediadata.xuexi.cn") ||
+                    lower.contains("/beacon") ||
+                    lower.contains("/stat.") ||
+                    lower.contains("/stats.") ||
+                    lower.contains("/report?") ||
+                    lower.contains("/log?") ||
+                    lower.contains("monitor.")
+                ) {
+                    return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream(EMPTY_BYTES))
+                }
+
+                // 4. BLACKLIST: Promotional large images, banners, recommendation covers, and social share icons
+                if (lower.endsWith(".jpg") || lower.contains(".jpg?") ||
+                    lower.endsWith(".jpeg") || lower.contains(".jpeg?") ||
+                    lower.endsWith(".webp") || lower.contains(".webp?") ||
+                    lower.endsWith(".gif") || lower.contains(".gif?") ||
+                    (lower.contains(".png") && (
+                        lower.contains("photoalbum") ||
+                        lower.contains("assets/") ||
+                        lower.contains("banner") ||
+                        lower.contains("poster") ||
+                        lower.contains("thumb") ||
+                        lower.contains("icon_top") ||
+                        lower.contains("logo") ||
+                        lower.contains("share")
+                    ))
+                ) {
+                    return WebResourceResponse("image/png", "UTF-8", ByteArrayInputStream(EMPTY_BYTES))
+                }
+
+                return super.shouldInterceptRequest(view, request)
+            }
+
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 injectPlayerScript(view)
