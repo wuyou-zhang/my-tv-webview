@@ -569,8 +569,8 @@
   },
   {
     "id": 61,
-    "name": "山东文旅频道",
-    "title": "山东文旅频道",
+    "name": "山东综艺频道",
+    "title": "山东综艺频道",
     "group": "山东",
     "uris": [
       "https://v.iqilu.com/live/zypd/"
