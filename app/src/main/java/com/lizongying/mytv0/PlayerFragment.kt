@@ -163,7 +163,7 @@ class PlayerFragment : Fragment() {
                 val urlStr = request.url.toString()
                 val lower = urlStr.lowercase()
 
-                // 2. WHITELIST: Essential media streaming protocols, chunks, keys, and player SDK core scripts
+                // 2. WHITELIST: Essential media streaming protocols, chunks, keys, player SDK, and CCTV official viewership heartbeats
                 if (lower.contains(".m3u8") ||
                     lower.contains(".ts") ||
                     lower.contains(".m4s") ||
@@ -172,6 +172,7 @@ class PlayerFragment : Fragment() {
                     lower.contains(".flv") ||
                     lower.contains(".aac") ||
                     lower.contains(".key") ||
+                    lower.contains("data.cctv.com") ||
                     lower.contains("vdn.live.cntv.cn") ||
                     lower.contains("vdn.apps.cntv.cn") ||
                     lower.contains("bcache.yangshipin.cn") ||
@@ -186,7 +187,7 @@ class PlayerFragment : Fragment() {
                     return super.shouldInterceptRequest(view, request)
                 }
 
-                // 3. BLACKLIST: Third-party analytics, trackers, ads, and telemetry report scripts
+                // 3. BLACKLIST: Third-party commercial analytics, trackers, ads, and general ad scripts
                 if (lower.contains("umeng") ||
                     lower.contains("sensors") ||
                     lower.contains("hm.baidu.com") ||
@@ -197,14 +198,9 @@ class PlayerFragment : Fragment() {
                     lower.contains("qt_web") ||
                     lower.contains("aplus") ||
                     lower.contains("cntv_advertise") ||
-                    lower.contains("data.cctv.com") ||
-                    lower.contains("p.data.cctv.com") ||
-                    lower.contains("mediadata.xuexi.cn") ||
                     lower.contains("/beacon") ||
                     lower.contains("/stat.") ||
                     lower.contains("/stats.") ||
-                    lower.contains("/report?") ||
-                    lower.contains("/log?") ||
                     lower.contains("monitor.")
                 ) {
                     return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream(EMPTY_BYTES))
