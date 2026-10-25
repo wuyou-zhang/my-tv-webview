@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
     private var settingFragment = SettingFragment()
     private var programFragment = ProgramFragment()
 
+    private var playingTvModel: TVModel? = null
+
     private val handler = Handler(Looper.myLooper()!!)
     private val delayHideMenu = 10 * 1000L
     private val delayHideSetting = 3 * 60 * 1000L
@@ -295,6 +297,7 @@ class MainActivity : AppCompatActivity() {
 //                    && tvModel.tv.id == TVList.positionValue
                 ) {
                     Log.i(TAG, "${tvModel.tv.title} 嘗試播放")
+                    playingTvModel = tvModel
                     hideFragment(errorFragment)
                     showFragment(loadingFragment)
                     playerFragment.play(tvModel)
@@ -543,6 +546,7 @@ class MainActivity : AppCompatActivity() {
 
     
     fun playTvModel(tvModel: TVModel) {
+        playingTvModel = tvModel
         hideFragment(errorFragment)
         showFragment(loadingFragment)
         playerFragment.play(tvModel)
@@ -824,6 +828,8 @@ class MainActivity : AppCompatActivity() {
         }, 2000)
     }
 
+    fun getPlayingTvModel(): TVModel? = playingTvModel
+
     private fun showSetting() {
         if (programFragment.isAdded && !programFragment.isHidden) {
             return
@@ -833,7 +839,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val tvModel = viewModel.groupModel.getCurrent()
+        val tvModel = playingTvModel ?: viewModel.groupModel.getCurrent()
         showFragment(settingFragment)
         settingFragment.updateCurrentChannel(tvModel)
         settingFragment.view?.bringToFront()

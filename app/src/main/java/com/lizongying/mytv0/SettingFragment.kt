@@ -191,7 +191,9 @@ class SettingFragment : Fragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden && ::viewModel.isInitialized) {
-            updateCurrentChannel(viewModel.groupModel.getCurrent())
+            val tvModel = (activity as? MainActivity)?.getPlayingTvModel()
+                ?: viewModel.groupModel.getCurrent()
+            updateCurrentChannel(tvModel)
         }
     }
 

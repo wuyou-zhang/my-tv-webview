@@ -127,6 +127,14 @@ class TVListModel(private val name: String, private val groupIndex: Int) : ViewM
         return tvListValue[idx]
     }
 
+    fun getTVModelAt(idx: Int): TVModel? {
+        if (idx < 0 || idx >= size()) {
+            return null
+        }
+
+        return tvListValue[idx]
+    }
+
     fun getCurrent(): TVModel? {
         if (positionValue < 0 || positionValue >= size()) {
             return getTVModel(0)

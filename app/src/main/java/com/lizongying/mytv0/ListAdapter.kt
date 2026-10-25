@@ -80,7 +80,7 @@ class ListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         listTVModel?.let {
-            val tvModel = it.getTVModel(position)!!
+            val tvModel = it.getTVModelAt(position)!!
             val view = viewHolder.itemView
 
             view.isFocusable = true
