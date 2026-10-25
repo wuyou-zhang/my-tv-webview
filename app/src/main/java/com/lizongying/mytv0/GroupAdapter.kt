@@ -175,7 +175,7 @@ class GroupAdapter(
 
         fun setSelectedGroup(isSelected: Boolean) {
             if (isSelected) {
-                binding.root.setBackgroundResource(R.color.focus)
+                binding.root.setBackgroundResource(R.color.menu_focus)
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
             } else {
                 binding.root.setBackgroundResource(android.R.color.transparent)

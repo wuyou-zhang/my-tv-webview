@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="1dp"
-    android:background="@color/blur">
+    android:background="@color/menu_item">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/number"

@@ -73,6 +73,8 @@ class PlayerFragment : Fragment() {
     }
 
     private var watchdogRunnable: Runnable? = null
+    private var watchdogAttempts = 0
+    private var watchdogReloaded = false
 
     fun onVideoPlaying() {
         cancelVideoWatchdog()
@@ -84,15 +86,29 @@ class PlayerFragment : Fragment() {
 
     private fun startVideoWatchdog() {
         cancelVideoWatchdog()
+        watchdogAttempts = 0
+        watchdogReloaded = false
         watchdogRunnable = Runnable {
-            if (isUsingWebView && _binding != null && binding.webView.alpha < 1f) {
-                Log.w(TAG, "Watchdog timeout: forcing video play and making WebView visible")
+            if (!isUsingWebView || _binding == null || binding.webView.alpha >= 1f) return@Runnable
+            watchdogAttempts++
+            if (watchdogAttempts >= 4) {
+                Log.w(TAG, "Watchdog timeout: no video frame rendered")
+                tvModel?.setErrInfo(R.string.play_error.getString())
+                return@Runnable
+            }
+            if (watchdogAttempts == 2 && !watchdogReloaded) {
+                // 网页播放器偶发初始化失败，重载一次通常即可恢复
+                watchdogReloaded = true
+                Log.w(TAG, "Watchdog: reloading page once")
+                binding.webView.reload()
+            } else {
+                Log.w(TAG, "Watchdog attempt $watchdogAttempts: forcing video play")
                 binding.webView.evaluateJavascript(
                     "try { var v = document.querySelector('video'); if (v) { v.muted=false; v.volume=1; v.play(); } } catch(e){}",
                     null
                 )
-                onVideoPlaying()
             }
+            handler.postDelayed(watchdogRunnable!!, 4000)
         }
         handler.postDelayed(watchdogRunnable!!, 5000)
     }
@@ -501,13 +517,39 @@ class PlayerFragment : Fragment() {
                     }
                 }
 
+                // 只在视频真正渲染出画面后才通知原生层显示 WebView，避免露出页面自身的大图/播放海报
+                function notifyReadyWhenFrame(v) {
+                    if (isReadyNotified) return;
+                    if (!window.__mytv_click_done) return;
+                    if (!v) {
+                        setTimeout(notifyReady, 300);
+                        return;
+                    }
+                    var fired = false;
+                    function fire() {
+                        if (fired) return;
+                        fired = true;
+                        notifyReady();
+                    }
+                    if (typeof v.requestVideoFrameCallback === 'function' && !v.paused) {
+                        try {
+                            v.requestVideoFrameCallback(function() { fire(); });
+                        } catch (e) {
+                            setTimeout(fire, 300);
+                        }
+                        setTimeout(fire, 1500);
+                    } else {
+                        setTimeout(fire, 300);
+                    }
+                }
+
                 function checkAndNotify(v) {
                     if (!v) return;
                     if (!window.__mytv_click_done) return;
                     if (!v.paused && (v.currentTime > 0.05 || v.readyState >= 2 || v.videoWidth > 0)) {
                         makeVideoFullscreen(v);
                         enforceUnmute(v);
-                        notifyReady();
+                        notifyReadyWhenFrame(v);
                     }
                 }
 
@@ -615,7 +657,7 @@ class PlayerFragment : Fragment() {
                                     setupVideo(v);
                                     if (!v.paused && (v.currentTime > 0.1 || v.readyState >= 2 || v.videoWidth > 0)) {
                                         clearInterval(waitPoll);
-                                        notifyReady();
+                                        notifyReadyWhenFrame(v);
                                     }
                                 }
                             }, 200);
@@ -624,7 +666,7 @@ class PlayerFragment : Fragment() {
                                 var v = findBestVideo();
                                 if (v) {
                                     setupVideo(v);
-                                    notifyReady();
+                                    notifyReadyWhenFrame(v);
                                 }
                             }, 6000);
                         }, 800);

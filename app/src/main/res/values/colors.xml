@@ -1,6 +1,9 @@
 <resources>
     <color name="focus">#0096A6</color>
+    <color name="menu_focus">#990096A6</color>
     <color name="blur">#FF263238</color>
+    <color name="menu_item">#CC263238</color>
+
     <color name="black">#000</color>
     <color name="white">#FFF</color>
     <color name="red">#F00</color>

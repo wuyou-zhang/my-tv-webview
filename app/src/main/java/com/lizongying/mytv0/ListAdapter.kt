@@ -213,11 +213,11 @@ class ListAdapter(
             if (selected) {
                 binding.number.setTextColor(ContextCompat.getColor(context, R.color.white))
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
-                binding.root.setBackgroundResource(R.color.focus)
+                binding.root.setBackgroundResource(R.color.menu_focus)
             } else {
                 binding.number.setTextColor(ContextCompat.getColor(context, R.color.title_blur))
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.title_blur))
-                binding.root.setBackgroundResource(R.color.blur)
+                binding.root.setBackgroundResource(R.color.menu_item)
             }
         }
 
