@@ -610,6 +610,10 @@ class MainViewModel : ViewModel() {
         // 全部频道
         groupModel.tvGroupValue[1].setTVListModel(listModel)
 
+        // 重建列表后恢复当前播放分组的下标，否则各分组都会从 0 开始
+        groupModel.tvGroupValue.getOrNull(groupModel.positionPlayingValue)
+            ?.setPositionPlaying(SP.position)
+
         if (string != cacheChannels && g.encode(string) != cacheChannels) {
             groupModel.initPosition()
         }

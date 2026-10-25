@@ -25,6 +25,7 @@ class ListAdapter(
     private val context: Context,
     private val recyclerView: RecyclerView,
     private var listTVModel: TVListModel?,
+    private val isPlayingList: (TVListModel) -> Boolean = { true },
 ) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     private var listener: ItemListener? = null
@@ -92,6 +93,9 @@ class ListAdapter(
                 viewHolder.like(tvModel.like.value as Boolean)
             }
 
+            val highlightedPosition = if (isPlayingList(it)) it.positionPlayingValue else -1
+            viewHolder.setSelectedChannel(position == highlightedPosition)
+
             if (!defaultFocused && position == defaultFocus) {
                 view.requestFocus()
                 defaultFocused = true
@@ -101,7 +105,7 @@ class ListAdapter(
                 listener?.onItemFocusChange(tvModel, hasFocus)
 
                 if (hasFocus) {
-                    viewHolder.focus(true)
+                    viewHolder.setSelectedChannel(true)
                     focused = view
                     if (visible) {
                         if (position != it.positionValue) {
@@ -111,13 +115,14 @@ class ListAdapter(
                         visible = true
                     }
                 } else {
-                    viewHolder.focus(false)
+                    viewHolder.setSelectedChannel(position == highlightedPosition)
                 }
             }
 
             view.onFocusChangeListener = onFocusChangeListener
 
             view.setOnClickListener { _ ->
+                it.setPosition(position)
                 listener?.onItemClicked(position, "list")
             }
 
@@ -204,8 +209,8 @@ class ListAdapter(
             binding.number.text = channelNum.toString()
         }
 
-        fun focus(hasFocus: Boolean) {
-            if (hasFocus) {
+        fun setSelectedChannel(selected: Boolean) {
+            if (selected) {
                 binding.number.setTextColor(ContextCompat.getColor(context, R.color.white))
                 binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
                 binding.root.setBackgroundResource(R.color.focus)
@@ -236,8 +241,9 @@ class ListAdapter(
     }
 
     fun toPosition(position: Int) {
-        Log.i(TAG, "position $position")
+        Log.i(TAG, "toPosition $position")
         recyclerView.post {
+            notifyDataSetChanged()
             (recyclerView.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
                 position,
                 0

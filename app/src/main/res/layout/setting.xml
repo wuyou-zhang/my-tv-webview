@@ -98,6 +98,17 @@
                 app:trackTint="@color/switch_track_color" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="显示时间 (右上角)"
+                android:textColor="#DDFFFFFF"
+                android:textSize="14sp"
+                app:thumbTint="@color/switch_thumb_color"
+                app:trackTint="@color/switch_track_color" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_channel_reversal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -64,7 +64,11 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             context,
             binding.list,
             getList(),
-        )
+        ) { list ->
+            val groupModel = viewModel.groupModel
+            groupModel.positionValue == groupModel.positionPlayingValue &&
+                    groupModel.tvGroupValue.getOrNull(groupModel.positionValue) === list
+        }
         binding.list.adapter = listAdapter
         binding.list.layoutManager =
             LinearLayoutManager(context)

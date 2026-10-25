@@ -64,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
     var lastMenuHideTime = 0L
 
+    private var lastSettingHideTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -326,9 +328,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (this::gestureDetector.isInitialized && event != null) {
-            gestureDetector.onTouchEvent(event)
-        }
         return super.onTouchEvent(event)
     }
 
@@ -351,7 +350,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            if (System.currentTimeMillis() - lastMenuHideTime < 500) {
+            val now = System.currentTimeMillis()
+            if (now - lastMenuHideTime < 500 || now - lastSettingHideTime < 500) {
                 return true
             }
 
@@ -363,7 +363,7 @@ class MainActivity : AppCompatActivity() {
                 val containerWidth = containerView?.width?.takeIf { it > 0 } ?: (340 * density).toInt()
                 val leftThreshold = curScreenWidth - containerWidth
                 if (e.x < leftThreshold) {
-                    hideFragment(settingFragment)
+                    hideSettingFragment()
                 } else {
                     settingActive()
                 }
@@ -418,21 +418,6 @@ class MainActivity : AppCompatActivity() {
             val dx = newX - oldX
             val dy = newY - oldY
             val curScreenWidth = resources.displayMetrics.widthPixels
-
-            // Vertical fling: switch channel
-            if (abs(dy) > abs(dx) && oldX > curScreenWidth / 4 && oldX < curScreenWidth * 3 / 4) {
-                if (velocityY > 0) {
-                    if ((!menuFragment.isAdded || menuFragment.isHidden) && (!settingFragment.isAdded || settingFragment.isHidden)) {
-                        prev()
-                    }
-                }
-                if (velocityY < 0) {
-                    if ((!menuFragment.isAdded || menuFragment.isHidden) && (!settingFragment.isAdded || settingFragment.isHidden)) {
-                        next()
-                    }
-                }
-                return true
-            }
 
             // Horizontal fling
             if (abs(dx) > abs(dy)) {
@@ -644,6 +629,14 @@ class MainActivity : AppCompatActivity() {
         if (menuFragment.isAdded && !menuFragment.isHidden) {
             hideFragment(menuFragment)
             lastMenuHideTime = System.currentTimeMillis()
+        }
+    }
+
+    fun hideSettingFragment() {
+        if (settingFragment.isAdded && !settingFragment.isHidden) {
+            hideFragment(settingFragment)
+            lastSettingHideTime = System.currentTimeMillis()
+            showTimeFragment()
         }
     }
 

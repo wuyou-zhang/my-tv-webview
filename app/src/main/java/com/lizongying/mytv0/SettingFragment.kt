@@ -46,12 +46,19 @@ class SettingFragment : Fragment() {
             mainActivity.settingActive()
         }
 
+        binding.switchTime.isChecked = SP.time
+        binding.switchTime.setOnCheckedChangeListener { _, isChecked ->
+            SP.time = isChecked
+            mainActivity.showTimeFragment()
+            mainActivity.settingActive()
+        }
+
         binding.btnExit.setOnClickListener {
             requireActivity().finish()
         }
 
         binding.setting.setOnClickListener {
-            mainActivity.hideFragment(this)
+            mainActivity.hideSettingFragment()
         }
         binding.container.setOnClickListener {
             mainActivity.settingActive()
