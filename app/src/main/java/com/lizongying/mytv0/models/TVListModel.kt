@@ -135,6 +135,10 @@ class TVListModel(private val name: String, private val groupIndex: Int) : ViewM
         return tvListValue[idx]
     }
 
+    fun indexOfTVModel(tvModel: TVModel): Int {
+        return tvListValue.indexOfFirst { it === tvModel }
+    }
+
     fun getCurrent(): TVModel? {
         if (positionValue < 0 || positionValue >= size()) {
             return getTVModel(0)

@@ -54,6 +54,18 @@ class MainActivity : AppCompatActivity() {
     private val delayHideMenu = 10 * 1000L
     private val delayHideSetting = 3 * 60 * 1000L
 
+    private var seekHoldKey = 0
+    private var seekLongActive = false
+    private val seekHoldRunnable = Runnable {
+        seekLongActive = true
+        playerFragment.startLocalSeek(seekHoldKey == KeyEvent.KEYCODE_DPAD_RIGHT)
+    }
+
+    private var seekScrolling = false
+    private var seekStartX = 0f
+    private var seekStartPosition = 0L
+    private var seekDuration = 0L
+
     private var doubleBackToExitPressedOnce = false
 
     private lateinit var gestureDetector: GestureDetector
@@ -325,6 +337,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (this::gestureDetector.isInitialized && ev != null) {
+            if (ev.actionMasked == MotionEvent.ACTION_UP || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+                seekScrolling = false
+            }
             gestureDetector.onTouchEvent(ev)
         }
         return super.dispatchTouchEvent(ev)
@@ -376,7 +391,11 @@ class MainActivity : AppCompatActivity() {
             if (menuFragment.isAdded && !menuFragment.isHidden) {
                 val groupView = menuFragment.view?.findViewById<View>(R.id.group)
                 val listView = menuFragment.view?.findViewById<View>(R.id.list)
-                val contentWidth = (groupView?.width ?: 0) + (listView?.width ?: 0)
+                val episodeView = menuFragment.view?.findViewById<View>(R.id.episode)
+                var contentWidth = (groupView?.width ?: 0) + (listView?.width ?: 0)
+                if (episodeView?.visibility == View.VISIBLE) {
+                    contentWidth += episodeView.width
+                }
                 val density = resources.displayMetrics.density
                 val threshold = if (contentWidth > 0) contentWidth.toFloat() else ((220 + 360) * density)
                 if (e.x > threshold) {
@@ -422,6 +441,11 @@ class MainActivity : AppCompatActivity() {
             val dy = newY - oldY
             val curScreenWidth = resources.displayMetrics.widthPixels
 
+            // 本地播放时横向滑动用于快进快退，不再触发设置/菜单
+            if (canLocalSeek() && abs(dx) > abs(dy)) {
+                return true
+            }
+
             // Horizontal fling
             if (abs(dx) > abs(dy)) {
                 // Swipe left from right side -> showSetting
@@ -461,6 +485,25 @@ class MainActivity : AppCompatActivity() {
         ): Boolean {
             if ((menuFragment.isAdded && !menuFragment.isHidden) || (settingFragment.isAdded && !settingFragment.isHidden)) {
                 return false
+            }
+
+            // 本地播放：横向滑动快进快退，约 60ms/像素
+            if (canLocalSeek() && abs(distanceX) > abs(distanceY)) {
+                if (!seekScrolling) {
+                    seekScrolling = true
+                    seekStartX = e1?.rawX ?: e2.rawX
+                    seekStartPosition = playerFragment.localPosition()
+                    seekDuration = playerFragment.localDurationMs()
+                    Log.i(TAG, "touch seek start at $seekStartPosition / $seekDuration")
+                }
+                if (seekDuration > 0) {
+                    val deltaX = e2.rawX - seekStartX
+                    val target = (seekStartPosition + (deltaX * 60).toLong())
+                        .coerceIn(0L, seekDuration)
+                    playerFragment.seekLocalTo(target)
+                    playerFragment.showSeekOverlay(target, seekDuration)
+                }
+                return true
             }
 
             val oldX = e1?.rawX ?: 0f
@@ -830,6 +873,10 @@ class MainActivity : AppCompatActivity() {
 
     fun getPlayingTvModel(): TVModel? = playingTvModel
 
+    fun saveLocalProgress() {
+        playerFragment.saveCurrentLocalProgress()
+    }
+
     private fun showSetting() {
         if (programFragment.isAdded && !programFragment.isHidden) {
             return
@@ -1029,11 +1076,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event != null && (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)) {
+            if (event.repeatCount == 0) {
+                if (canLocalSeek()) {
+                    seekHoldKey = keyCode
+                    seekLongActive = false
+                    handler.removeCallbacks(seekHoldRunnable)
+                    handler.postDelayed(seekHoldRunnable, 400)
+                    return true
+                }
+            } else if (keyCode == seekHoldKey) {
+                return true
+            }
+        }
         if (onKey(keyCode)) {
             return true
         }
 
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == seekHoldKey) {
+            handler.removeCallbacks(seekHoldRunnable)
+            val longActive = seekLongActive
+            playerFragment.stopLocalSeek()
+            seekHoldKey = 0
+            seekLongActive = false
+            if (!longActive && canLocalSeek()) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DPAD_LEFT -> showProgram()
+                    KeyEvent.KEYCODE_DPAD_RIGHT -> showSetting()
+                }
+            }
+            return true
+        }
+
+        return super.onKeyUp(keyCode, event)
+    }
+
+    private fun canLocalSeek(): Boolean {
+        if (settingFragment.isAdded && !settingFragment.isHidden) return false
+        if (menuFragment.isAdded && !menuFragment.isHidden) return false
+        if (programFragment.isAdded && !programFragment.isHidden) return false
+        return playerFragment.canLocalSeek()
     }
 
     override fun onResume() {
@@ -1051,6 +1137,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+
+        handler.removeCallbacks(seekHoldRunnable)
+        playerFragment.stopLocalSeek()
+        seekHoldKey = 0
+        seekLongActive = false
 
         isSafeToPerformFragmentTransactions = false
     }

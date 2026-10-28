@@ -35,6 +35,9 @@ class ListAdapter(
 
     var visible = false
 
+    var onEpisodeClick: ((TVModel) -> Unit)? = null
+    var isEpisodesOpen: ((TVModel) -> Boolean)? = null
+
     val application = context.applicationContext as MyTVApplication
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,6 +55,13 @@ class ListAdapter(
         binding.heart.layoutParams.width = application.px2Px(binding.heart.layoutParams.width)
         binding.heart.layoutParams.height = application.px2Px(binding.heart.layoutParams.height)
         binding.heart.setPadding(application.px2Px(binding.heart.paddingTop))
+
+        binding.episodeButton.layoutParams.width =
+            application.px2Px(binding.episodeButton.layoutParams.width)
+        binding.episodeButton.layoutParams.height =
+            application.px2Px(binding.episodeButton.layoutParams.height)
+        binding.episodeButton.textSize = application.px2PxFont(binding.episodeButton.textSize)
+        binding.episodeButton.setPadding(application.px2Px(binding.episodeButton.paddingTop))
 
         return ViewHolder(context, binding)
     }
@@ -178,6 +188,9 @@ class ListAdapter(
                     }
 
                     if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        if (listener?.onKey(this, keyCode) == true) {
+                            return@setOnKeyListener true
+                        }
                         tvModel.setLike(!(tvModel.like.value as Boolean))
                         viewHolder.like(tvModel.like.value as Boolean)
                         return@setOnKeyListener true
@@ -191,6 +204,15 @@ class ListAdapter(
             viewHolder.bindTitle(tvModel.tv.title)
 
             viewHolder.bindNumber(tvModel)
+
+            val showEpisodeButton = tvModel.isLocalVideo() && tvModel.tv.uris.size > 1
+            viewHolder.binding.episodeButton.visibility =
+                if (showEpisodeButton) View.VISIBLE else View.GONE
+            viewHolder.binding.episodeButton.text =
+                if (isEpisodesOpen?.invoke(tvModel) == true) "<" else ">"
+            viewHolder.binding.episodeButton.setOnClickListener {
+                onEpisodeClick?.invoke(tvModel)
+            }
         }
     }
 
@@ -238,6 +260,13 @@ class ListAdapter(
                 )
             }
         }
+    }
+
+    fun refreshEpisodeButton(tvModel: TVModel?) {
+        val model = tvModel ?: return
+        val position = listTVModel?.indexOfTVModel(model) ?: -1
+        if (position < 0) return
+        recyclerView.post { notifyItemChanged(position) }
     }
 
     fun toPosition(position: Int) {

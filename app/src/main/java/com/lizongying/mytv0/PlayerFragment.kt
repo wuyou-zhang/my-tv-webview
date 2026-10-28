@@ -867,6 +867,72 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    private var seekDirection = 0
+
+    private val seekRunnable = object : Runnable {
+        override fun run() {
+            val p = player ?: return
+            val duration = p.duration
+            if (duration <= 0) return
+            // 长按快进/快退：每 250ms 跳 15 秒，约 60 倍速
+            val target = (p.currentPosition + seekDirection * 15_000L).coerceIn(0L, duration)
+            p.seekTo(target)
+            handler.postDelayed(this, 250)
+        }
+    }
+
+    fun canLocalSeek(): Boolean {
+        return player != null && tvModel?.isLocalVideo() == true
+    }
+
+    fun startLocalSeek(forward: Boolean) {
+        if (!canLocalSeek()) return
+        Log.i(TAG, "startLocalSeek forward=$forward at ${player?.currentPosition}")
+        seekDirection = if (forward) 1 else -1
+        handler.removeCallbacks(seekRunnable)
+        seekRunnable.run()
+    }
+
+    fun stopLocalSeek() {
+        if (seekDirection != 0) {
+            Log.i(TAG, "stopLocalSeek at ${player?.currentPosition}")
+        }
+        handler.removeCallbacks(seekRunnable)
+        seekDirection = 0
+    }
+
+    fun localPosition(): Long = player?.currentPosition ?: 0L
+
+    fun localDurationMs(): Long = player?.duration?.takeIf { it > 0 } ?: 0L
+
+    fun seekLocalTo(position: Long) {
+        player?.seekTo(position)
+    }
+
+    private val hideSeekRunnable = Runnable {
+        binding.seekInfo.visibility = View.GONE
+        binding.seekBar.visibility = View.GONE
+    }
+
+    fun showSeekOverlay(position: Long, duration: Long) {
+        if (duration <= 0) return
+        binding.seekInfo.text = "${formatSeekTime(position)} / ${formatSeekTime(duration)}"
+        binding.seekBar.max = duration.toInt()
+        binding.seekBar.progress = position.toInt()
+        binding.seekInfo.visibility = View.VISIBLE
+        binding.seekBar.visibility = View.VISIBLE
+        handler.removeCallbacks(hideSeekRunnable)
+        handler.postDelayed(hideSeekRunnable, 800)
+    }
+
+    private fun formatSeekTime(ms: Long): String {
+        val total = ms / 1000
+        val h = total / 3600
+        val m = total % 3600 / 60
+        val s = total % 60
+        return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)
+    }
+
     @OptIn(UnstableApi::class)
     fun play(tvModel: TVModel) {
         if (this.tvModel != tvModel) {
@@ -1042,6 +1108,9 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        stopLocalSeek()
+        handler.removeCallbacks(hideSeekRunnable)
+        handler.post(hideSeekRunnable)
         saveCurrentLocalProgress()
         abandonAudioFocus()
         if (isUsingWebView) {

@@ -226,7 +226,11 @@ object SP {
     }
 
     fun getLocalPosition(key: String): Long {
-        return sp.getLong("local_pos_$key", 0L)
+        // 兼容上一版按集存储：没有按频道记录时回退到当前记录集的存档
+        return sp.getLong(
+            "local_pos_$key",
+            sp.getLong("local_pos_${key}_${getLocalEpisode(key)}", 0L)
+        )
     }
 
     fun setLocalPosition(key: String, position: Long) {

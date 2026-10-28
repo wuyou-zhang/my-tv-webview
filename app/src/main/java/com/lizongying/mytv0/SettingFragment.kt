@@ -85,14 +85,16 @@ class SettingFragment : Fragment() {
         binding.channelGroup.text = "${tvModel.tv.group} · 台号 ${tvModel.tv.id + 1}"
 
         val isLocal = tvModel.isLocalVideo()
+        // 本地文件夹的选集在左侧三级菜单里选择
+        binding.sourceSection.visibility = if (isLocal) View.GONE else View.VISIBLE
+        if (isLocal) {
+            return
+        }
+
         val uris = tvModel.tv.uris
         val currentIdx = tvModel.videoIndexValue
 
-        binding.sourceSectionTitle.text = if (isLocal) {
-            "选集列表 (${uris.size}集)"
-        } else {
-            "播放线路 (${uris.size}条线路)"
-        }
+        binding.sourceSectionTitle.text = "播放线路 (${uris.size}条线路)"
 
         binding.sourceListContainer.removeAllViews()
 
@@ -143,13 +145,7 @@ class SettingFragment : Fragment() {
                 setOnClickListener {
                     mainActivity.settingActive()
                     tvModel.setVideoIndex(i)
-                    if (isLocal) {
-                        val key = tvModel.getLocalProgressKey()
-                        SP.setLocalEpisode(key, i)
-                        SP.setLocalPosition(key, 0L)
-                    } else {
-                        SP.setChannelSourceIndex(tvModel.tv.id, i)
-                    }
+                    SP.setChannelSourceIndex(tvModel.tv.id, i)
                     mainActivity.playTvModel(tvModel)
                     updateCurrentChannel(tvModel)
                     this@SettingFragment.handler.postDelayed({
@@ -159,10 +155,6 @@ class SettingFragment : Fragment() {
             }
 
             val titleText = when {
-                isLocal -> {
-                    val name = uri.substringAfterLast("/").substringBeforeLast(".")
-                    if (name.isNotBlank()) "第 ${i + 1} 集：$name" else "第 ${i + 1} 集"
-                }
                 uri.contains("yangshipin.cn") -> "线路 ${i + 1}：央视频（高清/4K）"
                 uri.contains("cctv.com") -> "线路 ${i + 1}：央视网（官方备用）"
                 else -> "线路 ${i + 1}"

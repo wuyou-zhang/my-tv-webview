@@ -23,5 +23,12 @@
             android:layout_height="wrap_content"
             >
         </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/episode"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

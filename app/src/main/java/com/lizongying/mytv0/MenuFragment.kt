@@ -22,9 +22,14 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
 
     private lateinit var groupAdapter: GroupAdapter
     private lateinit var listAdapter: ListAdapter
+    private lateinit var episodeAdapter: EpisodeAdapter
 
     private var groupWidth = 0
     private var listWidth = 0
+    private var episodeWidth = 0
+
+    private var episodeTVModel: TVModel? = null
+    private var focusedTVModel: TVModel? = null
 
     private lateinit var viewModel: MainViewModel
 
@@ -80,6 +85,45 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
         }
         listAdapter.setItemListener(this)
 
+        listAdapter.onEpisodeClick = { tvModel ->
+            if (episodeTVModel === tvModel) {
+                hideEpisodes()
+            } else {
+                showEpisodes(tvModel)
+                (activity as? MainActivity)?.menuActive()
+            }
+        }
+
+        listAdapter.isEpisodesOpen = { tvModel -> episodeTVModel === tvModel }
+
+        episodeAdapter = EpisodeAdapter(context, binding.episode)
+        binding.episode.layoutManager = LinearLayoutManager(context)
+        binding.episode.adapter = episodeAdapter
+        episodeWidth = application.px2Px(binding.episode.layoutParams.width)
+        binding.episode.layoutParams.width = if (SP.compactMenu) {
+            episodeWidth * 4 / 5
+        } else {
+            episodeWidth
+        }
+        episodeAdapter.onEpisodeClicked = { index -> playEpisode(index) }
+        episodeAdapter.onEpisodeFocused = {
+            (activity as? MainActivity)?.menuActive()
+        }
+        episodeAdapter.onKey = { keyCode ->
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                val pos = episodeTVModel?.let {
+                    viewModel.groupModel.getCurrentList()?.indexOfTVModel(it)
+                } ?: -1
+                if (pos >= 0) {
+                    listAdapter.toPosition(pos)
+                }
+                hideEpisodes()
+                true
+            } else {
+                false
+            }
+        }
+
         binding.menu.setOnClickListener {
             hideSelf()
         }
@@ -129,6 +173,12 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             } else {
                 listWidth
             }
+
+            binding.episode.layoutParams.width = if (SP.compactMenu) {
+                episodeWidth * 4 / 5
+            } else {
+                episodeWidth
+            }
         }
     }
 
@@ -162,12 +212,17 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
         if (hasFocus) {
             (binding.list.adapter as ListAdapter).update(listTVModel)
             (activity as MainActivity).menuActive()
+            hideEpisodes()
         }
     }
 
     override fun onItemFocusChange(tvModel: TVModel, hasFocus: Boolean) {
         if (hasFocus) {
             (activity as MainActivity).menuActive()
+            focusedTVModel = tvModel
+            if (episodeTVModel !== tvModel) {
+                hideEpisodes()
+            }
         }
     }
 
@@ -177,6 +232,7 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             return
         }
         updateList(position)
+        hideEpisodes()
         (activity as MainActivity).menuActive()
     }
 
@@ -186,13 +242,78 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             return
         }
 
-        viewModel.groupModel.setPositionPlaying()
-        viewModel.groupModel.getCurrentList()?.let {
-            it.setPosition(position)
-            it.setPositionPlaying()
-            it.getCurrent()?.setReady()
-        }
+        val list = viewModel.groupModel.getCurrentList() ?: return
+        val tvModel = list.getTVModelAt(position) ?: return
 
+        viewModel.groupModel.setPositionPlaying()
+        list.setPosition(position)
+        list.setPositionPlaying()
+        // 同一频道重复播放时 play() 不会保存进度，先落盘当前播放位置再重建播放器
+        (activity as? MainActivity)?.saveLocalProgress()
+        tvModel.setReady()
+        hideEpisodes()
+        hideSelf()
+    }
+
+    private fun isMultiEpisodeLocal(tvModel: TVModel?): Boolean {
+        return tvModel != null && tvModel.isLocalVideo() && tvModel.tv.uris.size > 1
+    }
+
+    private fun showEpisodes(tvModel: TVModel?) {
+        if (!isMultiEpisodeLocal(tvModel)) {
+            hideEpisodes()
+            return
+        }
+        val model = tvModel!!
+        val previous = episodeTVModel
+        episodeTVModel = model
+        val labels = model.tv.uris.mapIndexed { index, uri ->
+            val name = uri.substringAfterLast('/').substringBeforeLast('.').ifBlank { uri }
+            "%02d %s".format(index + 1, name)
+        }
+        val playing = (activity as? MainActivity)?.getPlayingTvModel()
+        val current = if (playing === model) {
+            model.videoIndexValue.coerceIn(0, labels.size - 1)
+        } else {
+            -1
+        }
+        episodeAdapter.setData(labels, current)
+        binding.episode.visibility = VISIBLE
+        if (previous !== model) {
+            listAdapter.refreshEpisodeButton(previous)
+        }
+        listAdapter.refreshEpisodeButton(model)
+    }
+
+    private fun hideEpisodes() {
+        if (episodeTVModel == null && binding.episode.visibility == GONE) return
+        val previous = episodeTVModel
+        episodeTVModel = null
+        episodeAdapter.clear()
+        binding.episode.visibility = GONE
+        listAdapter.refreshEpisodeButton(previous)
+    }
+
+    private fun playEpisode(index: Int) {
+        val tvModel = episodeTVModel ?: return
+        val list = viewModel.groupModel.getCurrentList() ?: return
+        val position = list.indexOfTVModel(tvModel)
+        if (position < 0) {
+            hideEpisodes()
+            return
+        }
+        // 先把当前这一集的进度存下来，选集时 play() 不会重复保存
+        (activity as? MainActivity)?.saveLocalProgress()
+        // 每个频道只保留一条记录：切到别的集就把记录改成该集并从头播，切回记录中的集则续播
+        val key = tvModel.getLocalProgressKey()
+        if (SP.getLocalEpisode(key) != index) {
+            SP.setLocalEpisode(key, index)
+            SP.setLocalPosition(key, 0L)
+        }
+        viewModel.groupModel.setPositionPlaying()
+        list.setPosition(position)
+        list.setPositionPlaying(position)
+        tvModel.setReady()
         hideSelf()
     }
 
@@ -224,10 +345,19 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
 
     override fun onKey(listAdapter: ListAdapter, keyCode: Int): Boolean {
         when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                val tvModel = focusedTVModel
+                if (isMultiEpisodeLocal(tvModel)) {
+                    showEpisodes(tvModel)
+                    episodeAdapter.focusInitial()
+                    return true
+                }
+            }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
 //                binding.group.visibility = VISIBLE
 //                groupAdapter.focusable(true)
 //                listAdapter.focusable(false)
+                hideEpisodes()
                 listAdapter.clear()
                 groupAdapter.scrollToPositionAndSelect(viewModel.groupModel.positionValue)
                 return true
@@ -255,6 +385,9 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
             listAdapter.toPosition(it.positionPlayingValue)
         }
 
+        focusedTVModel = null
+        hideEpisodes()
+
         (activity as MainActivity).menuActive()
         view?.bringToFront()
     }
@@ -264,6 +397,7 @@ class MenuFragment : Fragment(), GroupAdapter.ItemListener, ListAdapter.ItemList
         if (!hidden) {
             onVisible()
         } else {
+            hideEpisodes()
             view?.post {
 //                binding.group.visibility = GONE
 //                groupAdapter.focusable(false)

@@ -52,31 +52,40 @@
                 android:layout_marginBottom="16dp"
                 android:background="#22FFFFFF" />
 
-            <!-- Route Header -->
-            <TextView
-                android:id="@+id/source_section_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="播放线路 / 选集"
-                android:textColor="@color/focus"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <!-- Dynamic Source List Container -->
+            <!-- Route / Episode Section -->
             <LinearLayout
-                android:id="@+id/source_list_container"
+                android:id="@+id/source_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical" />
+                android:orientation="vertical">
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="16dp"
-                android:background="#22FFFFFF" />
+                <!-- Route Header -->
+                <TextView
+                    android:id="@+id/source_section_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="播放线路 / 选集"
+                    android:textColor="@color/focus"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Dynamic Source List Container -->
+                <LinearLayout
+                    android:id="@+id/source_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="#22FFFFFF" />
+
+            </LinearLayout>
 
             <!-- Quick Settings -->
             <TextView
