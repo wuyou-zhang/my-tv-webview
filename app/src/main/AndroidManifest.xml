@@ -22,6 +22,7 @@
             android:banner="@drawable/banner0"
             android:icon="@drawable/logo0"
             android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

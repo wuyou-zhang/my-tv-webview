@@ -364,6 +364,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun onDown(e: MotionEvent): Boolean {
             playerFragment.hideVolumeNow()
+            volumeAccum = 0f
+            brightnessAccum = 0f
             return true
         }
 
@@ -474,8 +476,8 @@ class MainActivity : AppCompatActivity() {
             return super.onFling(e1, e2, velocityX, velocityY)
         }
 
-        private var lastScrollTime: Long = 0
-        private var decayFactor: Float = 1.0f
+        private var volumeAccum = 0f
+        private var brightnessAccum = 0f
 
         override fun onScroll(
             e1: MotionEvent?,
@@ -507,35 +509,25 @@ class MainActivity : AppCompatActivity() {
             }
 
             val oldX = e1?.rawX ?: 0f
-            val oldY = e1?.rawY ?: 0f
-            val newX = e2.rawX
-            val newY = e2.rawY
 
-            if (oldX < screenWidth / 3) {
-                val currentTime = System.currentTimeMillis()
-                val deltaTime = currentTime - lastScrollTime
-                lastScrollTime = currentTime
-
-                decayFactor =
-                    0.01f.coerceAtLeast(decayFactor - 0.03f * deltaTime)
-                val delta =
-                    ((oldY - newY) * decayFactor * 0.2 / screenHeight).toFloat()
-                adjustBrightness(delta)
-                decayFactor = 1.0f
+            if (oldX < screenWidth / 3 && abs(distanceY) > abs(distanceX)) {
+                // 按每次事件的位移增量累积，整屏约对应 50% 亮度
+                brightnessAccum += distanceY * 0.5f / screenHeight
+                if (abs(brightnessAccum) >= 0.005f) {
+                    adjustBrightness(brightnessAccum)
+                    brightnessAccum = 0f
+                }
                 return super.onScroll(e1, e2, distanceX, distanceY)
             }
 
             if (oldX > screenWidth * 2 / 3 && abs(distanceY) > abs(distanceX)) {
-                val currentTime = System.currentTimeMillis()
-                val deltaTime = currentTime - lastScrollTime
-                lastScrollTime = currentTime
-
-                decayFactor =
-                    0.01f.coerceAtLeast(decayFactor - 0.03f * deltaTime)
-                val delta =
-                    ((oldY - newY) * maxVolume * decayFactor * 0.2 / screenHeight).toInt()
-                adjustVolume(delta)
-                decayFactor = 1.0f
+                // 按每次事件的位移增量累积，整屏约对应满音量
+                volumeAccum += distanceY * maxVolume / screenHeight
+                val steps = volumeAccum.toInt()
+                if (steps != 0) {
+                    volumeAccum -= steps
+                    adjustVolume(steps)
+                }
                 return super.onScroll(e1, e2, distanceX, distanceY)
             }
 

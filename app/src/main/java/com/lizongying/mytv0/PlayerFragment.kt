@@ -75,9 +75,17 @@ class PlayerFragment : Fragment() {
     private var watchdogRunnable: Runnable? = null
     private var watchdogAttempts = 0
     private var watchdogReloaded = false
+    private var webSourceFallbacks = 0
 
     fun onVideoPlaying() {
         cancelVideoWatchdog()
+        val model = tvModel
+        val usedFallback = webSourceFallbacks > 0
+        webSourceFallbacks = 0
+        if (usedFallback && model != null && !model.isLocalVideo()) {
+            // 自动换线成功的线路直接记住，下次不再重复等待失败线路
+            SP.setChannelSourceIndex(model.tv.id, model.videoIndexValue)
+        }
         if (isUsingWebView && _binding != null) {
             binding.webView.alpha = 1f
         }
@@ -92,8 +100,17 @@ class PlayerFragment : Fragment() {
             if (!isUsingWebView || _binding == null || binding.webView.alpha >= 1f) return@Runnable
             watchdogAttempts++
             if (watchdogAttempts >= 4) {
-                Log.w(TAG, "Watchdog timeout: no video frame rendered")
-                tvModel?.setErrInfo(R.string.play_error.getString())
+                val model = tvModel
+                if (model != null && webSourceFallbacks < model.tv.uris.size - 1) {
+                    // 网页线路打不开时自动换下一条线路，而不是直接报播放失败
+                    webSourceFallbacks++
+                    Log.w(TAG, "Watchdog timeout: switch source ${model.videoIndexValue} -> next")
+                    model.nextVideo()
+                    model.setReady(true)
+                } else {
+                    Log.w(TAG, "Watchdog timeout: no video frame rendered")
+                    model?.setErrInfo(R.string.play_error.getString())
+                }
                 return@Runnable
             }
             if (watchdogAttempts == 2 && !watchdogReloaded) {
@@ -937,17 +954,19 @@ class PlayerFragment : Fragment() {
     fun play(tvModel: TVModel) {
         if (this.tvModel != tvModel) {
             saveCurrentLocalProgress()
+            webSourceFallbacks = 0
         }
         this.tvModel = tvModel
 
 
+        val keepVideoIndex = tvModel.consumeKeepVideoIndex()
         if (tvModel.isLocalVideo()) {
             val key = tvModel.getLocalProgressKey()
             val savedEp = SP.getLocalEpisode(key)
             if (savedEp in 0 until tvModel.tv.uris.size && tvModel.videoIndexValue != savedEp) {
                 tvModel.setVideoIndex(savedEp)
             }
-        } else {
+        } else if (!keepVideoIndex) {
             val savedIndex = SP.getChannelSourceIndex(tvModel.tv.id)
             if (savedIndex in 0 until tvModel.tv.uris.size && tvModel.videoIndexValue != savedIndex) {
                 tvModel.setVideoIndex(savedIndex)
@@ -986,8 +1005,10 @@ class PlayerFragment : Fragment() {
         // Direct stream -> ExoPlayer
         isUsingWebView = false
         cancelVideoWatchdog()
+        // 网页可能在熄屏时被暂停，先恢复再暂停并卸载媒体源，确保旧频道真正停止发声
+        binding.webView.onResume()
         binding.webView.evaluateJavascript(
-            "try { document.querySelectorAll('video, audio').forEach(function(v){ v.pause(); v.muted = true; v.volume = 0; v.removeAttribute('src'); v.load(); }); } catch(e){}",
+            "try { document.querySelectorAll('video, audio').forEach(function(v){ v.pause(); v.removeAttribute('src'); v.load(); }); } catch(e){}",
             null
         )
         binding.webView.stopLoading()
@@ -1098,12 +1119,13 @@ class PlayerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val model = tvModel ?: return
         if (isUsingWebView) {
             binding.webView.onResume()
-        } else if (player?.isPlaying == false) {
-            player?.prepare()
-            player?.play()
         }
+        // 熄屏/切后台回来后统一重建当前频道：本地续播上次位置，网页重新加载，避免黑屏、卡顿和残留音频
+        Log.i(TAG, "resume playback for ${model.tv.title}")
+        play(model)
     }
 
     override fun onPause() {
@@ -1114,6 +1136,10 @@ class PlayerFragment : Fragment() {
         saveCurrentLocalProgress()
         abandonAudioFocus()
         if (isUsingWebView) {
+            binding.webView.evaluateJavascript(
+                "try { document.querySelectorAll('video, audio').forEach(function(v){ v.pause(); }); } catch(e){}",
+                null
+            )
             binding.webView.onPause()
         } else if (player?.isPlaying == true) {
             player?.stop()

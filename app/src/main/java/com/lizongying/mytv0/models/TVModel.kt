@@ -92,6 +92,16 @@ class TVModel(var tv: TV) : ViewModel() {
     val ready: LiveData<Boolean>
         get() = _ready
 
+    // 重试时保留当前线路，避免 play() 又按已保存的线路覆盖回去
+    var keepVideoIndex = false
+        private set
+
+    fun consumeKeepVideoIndex(): Boolean {
+        val keep = keepVideoIndex
+        keepVideoIndex = false
+        return keep
+    }
+
     fun setReady(retry: Boolean = false) {
         _errInfo.value = null
         if (!retry) {
@@ -107,6 +117,8 @@ class TVModel(var tv: TV) : ViewModel() {
             _videoIndex.value = defaultIdx
             sourceTypeIndex =
                 max(0, min(sourceTypeList.size - 1, sourceTypeList.indexOf(tv.sourceType)))
+        } else {
+            keepVideoIndex = true
         }
         _ready.value = true
     }
