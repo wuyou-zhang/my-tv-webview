@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.content.Context
 import android.media.AudioManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.view.ViewGroup
+import android.widget.Toast
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -77,6 +80,12 @@ class PlayerFragment : Fragment() {
     private var watchdogReloaded = false
     private var webSourceFallbacks = 0
 
+    private var stallRunnable: Runnable? = null
+    private var stallLastTimeMs = -1L
+    private var stallCount = 0
+    private var stallReloaded = false
+    private var stallNetToastShown = false
+
     fun onVideoPlaying() {
         cancelVideoWatchdog()
         val model = tvModel
@@ -88,6 +97,8 @@ class PlayerFragment : Fragment() {
         }
         if (isUsingWebView && _binding != null) {
             binding.webView.alpha = 1f
+            // 画面已渲染后转入卡顿监测：断网/页面假死时主动恢复，而不是永远停在最后一帧
+            startStallWatchdog()
         }
         tvModel?.setErrInfo("")
     }
@@ -133,6 +144,101 @@ class PlayerFragment : Fragment() {
     private fun cancelVideoWatchdog() {
         watchdogRunnable?.let { handler.removeCallbacks(it) }
         watchdogRunnable = null
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            ?: return true
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun startStallWatchdog() {
+        cancelStallWatchdog()
+        stallLastTimeMs = -1L
+        stallCount = 0
+        stallReloaded = false
+        stallNetToastShown = false
+        // evaluateJavascript 回调是异步的，回调里必须校验代际，防止旧回调把新看门狗重复排期
+        val runnable = object : Runnable {
+            override fun run() {
+                pollWebVideoStall(this)
+            }
+        }
+        stallRunnable = runnable
+        handler.postDelayed(runnable, STALL_POLL_INTERVAL)
+    }
+
+    private fun cancelStallWatchdog() {
+        stallRunnable?.let { handler.removeCallbacks(it) }
+        stallRunnable = null
+    }
+
+    private fun pollWebVideoStall(expected: Runnable) {
+        if (!isUsingWebView || _binding == null) return
+        binding.webView.evaluateJavascript(
+            "(function(){try{var v=document.querySelector('video');" +
+                "if(!v)return null;" +
+                "return Math.round(v.currentTime*1000);}catch(e){return null;}})()",
+            { result -> handleStallPollResult(result, expected) }
+        )
+    }
+
+    private fun handleStallPollResult(result: String?, expected: Runnable) {
+        if (expected !== stallRunnable || !isUsingWebView || _binding == null) return
+        val timeMs = result?.removeSurrounding("\"")?.toLongOrNull() ?: -1L
+
+        when {
+            timeMs >= 0 && stallLastTimeMs >= 0 && timeMs != stallLastTimeMs -> {
+                stallLastTimeMs = timeMs
+                stallCount = 0
+                stallNetToastShown = false
+            }
+            timeMs >= 0 -> {
+                if (stallLastTimeMs >= 0) stallCount++
+                stallLastTimeMs = timeMs
+            }
+            else -> {
+                stallLastTimeMs = -1L
+                stallCount++
+            }
+        }
+
+        if (stallCount >= STALL_THRESHOLD) {
+            if (!isNetworkAvailable()) {
+                if (!stallNetToastShown) {
+                    stallNetToastShown = true
+                    Log.w(TAG, "Stall watchdog: network unavailable, waiting for recovery")
+                    Toast.makeText(requireContext(), R.string.net_disconnected.getString(), Toast.LENGTH_LONG).show()
+                }
+            } else {
+                recoverFromStall()
+                return
+            }
+        }
+        handler.postDelayed(expected, STALL_POLL_INTERVAL)
+    }
+
+    private fun recoverFromStall() {
+        cancelStallWatchdog()
+        val model = tvModel
+        if (!stallReloaded) {
+            stallReloaded = true
+            Log.w(TAG, "Stall watchdog: video frozen, reloading page once")
+            binding.webView.reload()
+            startVideoWatchdog()
+            return
+        }
+        if (model != null && webSourceFallbacks < model.tv.uris.size - 1) {
+            webSourceFallbacks++
+            Log.w(TAG, "Stall watchdog: switch source ${model.videoIndexValue} -> next")
+            model.nextVideo()
+            model.setReady(true)
+            return
+        }
+        Log.w(TAG, "Stall watchdog: all sources stalled")
+        model?.setErrInfo(R.string.play_error.getString())
     }
 
     override fun onCreateView(
@@ -991,6 +1097,7 @@ class PlayerFragment : Fragment() {
             binding.webView.visibility = View.VISIBLE
             binding.webView.alpha = 0f
             cancelVideoWatchdog()
+            cancelStallWatchdog()
             binding.webView.onResume()
             binding.webView.stopLoading()
             binding.webView.evaluateJavascript(
@@ -1005,6 +1112,7 @@ class PlayerFragment : Fragment() {
         // Direct stream -> ExoPlayer
         isUsingWebView = false
         cancelVideoWatchdog()
+        cancelStallWatchdog()
         // 网页可能在熄屏时被暂停，先恢复再暂停并卸载媒体源，确保旧频道真正停止发声
         binding.webView.onResume()
         binding.webView.evaluateJavascript(
@@ -1131,6 +1239,7 @@ class PlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         stopLocalSeek()
+        cancelStallWatchdog()
         handler.removeCallbacks(hideSeekRunnable)
         handler.post(hideSeekRunnable)
         saveCurrentLocalProgress()
@@ -1150,6 +1259,7 @@ class PlayerFragment : Fragment() {
         super.onDestroy()
         saveCurrentLocalProgress()
         cancelVideoWatchdog()
+        cancelStallWatchdog()
         abandonAudioFocus()
         player?.release()
         try {
@@ -1164,10 +1274,13 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         cancelVideoWatchdog()
+        cancelStallWatchdog()
         _binding = null
     }
 
     companion object {
         private const val TAG = "PlayerFragment"
+        private const val STALL_POLL_INTERVAL = 3000L
+        private const val STALL_THRESHOLD = 4
     }
 }

@@ -1,34 +1,53 @@
 # 我的电视 · 本地版
 
-基于 [my-tv-webview](https://github.com/zwc456baby/my-tv-webview) 的个人定制版：保留原版的央视 / 卫视网页直播，并加入本地剧集媒体库、三级选集、单记录续播和手机 / 遥控器快进快退等。
+[![Build Release APK](https://github.com/wuyou-zhang/my-tv-webview/actions/workflows/release.yml/badge.svg)](https://github.com/wuyou-zhang/my-tv-webview/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Platform](https://img.shields.io/badge/Android-5.0%2B-green.svg)]()
+
+Android TV / 平板 / 手机通用的电视应用：一边是央视、卫视等电视台的**官方网页直播**，一边是**本地剧集媒体库**（三级选集、断点续播）。遥控器、触屏两套操作习惯都照顾到。
 
 ![直播](./docs/screenshots/tv.jpg)
 
-## 功能
+## 截图
 
-### 直播
+| 频道菜单 | 三级选集 |
+| --- | --- |
+| ![](./docs/screenshots/menu.jpg) | ![](./docs/screenshots/episodes.jpg) |
+
+| 便捷设置 | 直播 |
+| --- | --- |
+| ![](./docs/screenshots/settings.jpg) | ![](./docs/screenshots/tv.jpg) |
+
+## 直播
 
 - 央视、各大卫视、地方台、少儿卡通等分组，频道列表自动更新，支持自定义源（见 `source` 目录）
-- 每个频道支持多条播放线路（央视频 / 央视网）：网页加载失败会自动切换到下一条线路，并记住可用的线路，下次直接播放
+- 每个频道支持多条播放线路（央视频 / 央视网），加载失败自动切换下一条线路，并记住可用线路，下次直接播放
+- 播放自愈：页面加载超时自动重试；播放中画面停滞会自动重载页面，仍无效则切换线路
+- 断网保护：网络断开时提示「网络已断开，恢复后自动重试」，恢复后无需手动操作
 - 收藏频道：点频道行右侧红心加入「我的收藏」
 - 换台：遥控器上 / 下键、数字键；可在设置中开启换台反转
 
-### 本地媒体库
+## 本地媒体库
 
-- 自动扫描 `/storage/emulated/0/我的电视本地资源库/`（也支持 TF 卡、U 盘），按目录生成分组与频道
-- 支持 mp4、mkv、avi、flv、ts、mov、rmvb、wmv、m4v、webm、iso
-- 目录结构：
+自动扫描 `/storage/emulated/0/我的电视本地资源库/`（也支持 TF 卡、U 盘），按目录生成分组与频道：
 
 ```
 我的电视本地资源库/
 └── 经典影视/                          # 分组
-    └── 寄生兽/                        # 频道
+    └── 寄生兽/                        # 频道（一部剧）
         ├── [Skytree][Kiseijuu_Sei_no_Kakuritsu][01][GB_JP][720P].mp4
         ├── [Skytree][Kiseijuu_Sei_no_Kakuritsu][02][GB_JP][720P].mp4
         └── ...
 ```
 
-### 手机手势
+- 支持格式：mp4、mkv、avi、flv、ts、mov、rmvb、wmv、m4v、webm、iso
+- 三级菜单：分组 → 频道（剧集）→ 选集列表，选集列表按「序号 文件名」显示
+- 断点续播：每个频道保存一条播放进度，下次进入自动跳到上次位置；切换剧集即切换进度记录
+- 最后一集播完自动回到第一集循环
+
+## 操作说明
+
+### 手机 / 平板手势
 
 | 操作 | 功能 |
 | --- | --- |
@@ -55,15 +74,15 @@
 
 开机自启、右上角显示时间、换台反转、退出应用；直播频道可在此切换播放线路。
 
-## 截图
+## 安装
 
-| 频道菜单 | 三级选集 |
-| --- | --- |
-| ![](./docs/screenshots/menu.jpg) | ![](./docs/screenshots/episodes.jpg) |
+从 [Releases](https://github.com/wuyou-zhang/my-tv-webview/releases) 下载最新 APK 安装即可。构建使用固定签名，后续版本可直接覆盖安装，无需卸载。
 
-| 便捷设置 |
-| --- |
-| ![](./docs/screenshots/settings.jpg) |
+## 常见问题
+
+- **直播黑屏 / 加载失败**：应用会自动重试并切换线路，全部线路失败时换台再试，或检查网络
+- **本地视频没有出现**：确认目录结构为「资源库/分组/剧集/视频文件」三级，且格式在支持列表内
+- **画面卡住不动**：稍等片刻，应用检测到画面停滞会自动恢复；断网时会提示，恢复后自动重试
 
 ## 构建
 
@@ -80,15 +99,26 @@
 推送 `v*` 标签会由 GitHub Actions 自动构建 APK 并创建 Release：
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 构建使用仓库内 `keystore/debug.keystore` 固定签名，后续版本可直接覆盖安装。
+
+## 赞赏
+
+如果这个项目对你有帮助，欢迎扫码赞赏，支持作者继续维护：
+
+![赞赏二维码](./docs/donate.png)
+
+## 参考项目
+
+- [my-tv-webview](https://github.com/zwc456baby/my-tv-webview)：沿用开发思路
+- [WebViewTvLive](https://github.com/hxh19950701/WebViewTvLive)：同类网页直播播放器，功能参考
+- [my-tv-0](https://github.com/lizongying/my-tv-0)：网页直播播放框架的早期项目
 
 ## 声明
 
 - 本应用仅嵌套展示电视台公开的直播页面，所有内容来自原网站，版权归原网站所有。
 - 本应用不提供任何视频资源，不储存、不转发，仅用于学习研究用途。
-- 本项目基于 [my-tv-webview](https://github.com/zwc456baby/my-tv-webview)，参考 [my-tv-0](https://github.com/lizongying/my-tv-0) 与 [WebViewTvLive](https://github.com/hxh19950701/WebViewTvLive)。
 - [MIT License](./LICENSE)
